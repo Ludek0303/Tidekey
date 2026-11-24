@@ -15,7 +15,7 @@ przyjmować zmiany, ten plik opisze, jak podpisać CLA.
 
 ## Dla osób, które budują projekt u siebie
 
-- Budowanie i testy: [README.md](README.md) („Uruchomienie dla programisty”, „Testy”) i [CLAUDE.md](CLAUDE.md).
+- Budowanie i testy: [README.md](README.md) („Szybki start”, „Testy”) i [CLAUDE.md](CLAUDE.md).
 - Dokumentacja i komunikaty w aplikacji są po polsku, kod i komentarze w kodzie po angielsku.
 - **Zależności:** dozwolone są tylko licencje z listy w `deny.toml` i w zadaniu `licencje` w
   `.github/workflows/ci.yml` (MIT, Apache-2.0, BSD, ISC, Zlib i podobne). Nie dodajemy zależności na GPL ani AGPL, na
