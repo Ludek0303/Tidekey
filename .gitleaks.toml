@@ -1,0 +1,8 @@
+# gitleaks (CI job "secrets", docs/LICENCJE.md): the default rules, without the checksums of crates in Cargo.lock,
+# which are SHA-256 sums of published packages and look like keys to the generic rule.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Cargo.lock checksums"
+paths = ['''(^|/)Cargo\.lock$''']

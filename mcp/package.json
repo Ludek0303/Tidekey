@@ -1,0 +1,38 @@
+{
+  "name": "@notatki/mcp",
+  "license": "AGPL-3.0-or-later",
+  "version": "1.0.0",
+  "description": "Serwer MCP „Notatki”: dostęp Claude do zaszyfrowanych notatek (docs/MCP.md)",
+  "type": "module",
+  "bin": {
+    "notatki-mcp": "dist/notatki-mcp.mjs"
+  },
+  "files": [
+    "dist/notatki-mcp.mjs",
+    "dist/LICENSE",
+    "dist/THIRD_PARTY_NOTICES.txt",
+    "claude-settings.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "vitest run",
+    "release": "node scripts/release.mjs",
+    "repro": "bash scripts/repro-check.sh"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "@napi-rs/keyring": "2.1.2",
+    "libsodium-wrappers": "0.8.4",
+    "yjs": "13.6.33",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "rolldown": "1.2.14",
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.5"
+  }
+}

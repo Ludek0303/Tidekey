@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="pl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Podgląd plików — makiety</title>
+<!-- Prawdziwe zmienne motywu aplikacji. Klasy .podglad-* to wzór dla ui/src/preview/preview.css. -->
+<link rel="stylesheet" href="../../../ui/src/tokens.css">
+<style>
+  /* ---- strona makiet (nie wchodzi do aplikacji) ---- */
+  body { margin: 0; padding: 24px; background: var(--ribbon); color: var(--text); font: var(--ui-font-size)/1.45 var(--font-ui); }
+  .makieta-naglowek { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 1400px; margin: 0 auto 20px; }
+  .makieta-naglowek h1 { font-size: 18px; margin: 0; font-weight: 600; }
+  .makiety { display: grid; grid-template-columns: repeat(auto-fill, minmax(620px, 1fr)); gap: 28px; max-width: 1400px; margin: 0 auto; }
+  figure { margin: 0; }
+  figcaption { margin: 0 0 8px; color: var(--muted); }
+  .ekran { position: relative; height: 420px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+    background: var(--editor-bg); }
+  .ekran.waski { width: 375px; height: 660px; }
+  .aplikacja-pod { position: absolute; inset: 0; padding: 24px 32px; color: var(--muted); }
+  .aplikacja-pod p { margin: 0 0 10px; max-width: 46ch; }
+
+  /* ---- okno podglądu: wzór dla preview.css ---- */
+  .podglad {
+    --podglad-tlo: var(--overlay);
+    --podglad-okno: var(--bg);
+    --podglad-pasek: var(--panel);
+    --podglad-krawedz: var(--border);
+    --podglad-tekst: var(--text);
+    --podglad-opis: var(--muted);
+    --podglad-akcent: var(--accent);
+    --podglad-karta: var(--editor-bg);
+    --podglad-postep: var(--accent);
+    --podglad-blad: var(--danger);
+    --podglad-promien: var(--radius-panel);
+    --podglad-czas: 120ms;
+    position: absolute; /* w aplikacji: fixed */
+    inset: 0; z-index: 60; display: grid; place-items: center; padding: 24px;
+    background: var(--podglad-tlo);
+  }
+  .podglad-okno {
+    width: min(1200px, 100%); height: min(860px, 100%); display: grid; grid-template-rows: auto 1fr; grid-template-columns: minmax(0, 1fr);
+    background: var(--podglad-okno); color: var(--podglad-tekst);
+    border: 1px solid var(--podglad-krawedz); border-radius: var(--podglad-promien); overflow: hidden;
+    box-shadow: var(--shadow-float);
+  }
+  .podglad-pasek {
+    display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 8px 0 14px;
+    background: var(--podglad-pasek); border-bottom: 1px solid var(--podglad-krawedz);
+  }
+  .podglad-ikona { flex: none; width: 18px; height: 18px; color: var(--podglad-opis); }
+  .podglad-nazwa { min-width: 0; display: flex; flex-direction: column; flex: 1 1 auto; }
+  .podglad-nazwa strong { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .podglad-opis { color: var(--podglad-opis); font-size: 12px; }
+  .podglad-nav { display: flex; align-items: center; gap: 2px; color: var(--podglad-opis); font-variant-numeric: tabular-nums; }
+  .podglad-licznik { min-width: 52px; text-align: center; font-size: 12px; }
+  .podglad-akcje { display: flex; align-items: center; gap: 4px; }
+  .podglad-przycisk {
+    display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px;
+    background: transparent; color: var(--podglad-tekst); border: 1px solid transparent; border-radius: var(--radius-sm);
+    font: inherit; cursor: pointer;
+  }
+  .podglad-przycisk:hover { background: var(--hover); }
+  .podglad-przycisk:focus-visible { outline: 2px solid var(--podglad-akcent); outline-offset: 1px; }
+  .podglad-przycisk.tylko-ikona { width: 32px; padding: 0; justify-content: center; }
+  .podglad-przycisk svg { width: 16px; height: 16px; }
+  .podglad-przycisk[disabled] { opacity: .4; cursor: default; }
+  .podglad-separator { width: 1px; height: 20px; background: var(--podglad-krawedz); margin: 0 4px; }
+  .podglad-tresc { position: relative; min-height: 0; overflow: hidden; }
+  .podglad-ramka { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: var(--podglad-okno); }
+  .podglad-wiecej { display: none; }
+  /* węższe okno: same ikony (nazwa przycisku zostaje w aria-label i dymku) */
+  .podglad-okno { container-type: inline-size; }
+  @container (max-width: 760px) {
+    .podglad-etykieta { display: none; }
+    .podglad-przycisk.pelne { width: 32px; padding: 0; justify-content: center; }
+    .podglad-nav { gap: 0; }
+    .podglad-licznik { min-width: 44px; }
+  }
+
+  /* stany: rysuje aplikacja */
+  .podglad-stan { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; }
+  .podglad-karta {
+    width: min(420px, 100%); padding: 28px 24px 22px; display: grid; justify-items: center; gap: 10px;
+    background: var(--podglad-karta); border: 1px solid var(--podglad-krawedz); border-radius: var(--radius-panel);
+  }
+  .podglad-karta .duza-ikona { width: 44px; height: 44px; color: var(--podglad-opis); }
+  .podglad-karta h2 { margin: 4px 0 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+  .podglad-karta p { margin: 0; color: var(--podglad-opis); }
+  .podglad-karta .akcje { display: flex; gap: 8px; margin-top: 8px; }
+  .podglad-karta.is-blad h2 { color: var(--podglad-tekst); }
+  .podglad-karta.is-blad .duza-ikona { color: var(--podglad-blad); }
+  .podglad-postep { width: 260px; height: 4px; border-radius: 2px; background: var(--podglad-krawedz); overflow: hidden; }
+  .podglad-postep > span { display: block; height: 100%; background: var(--podglad-postep); }
+  .podglad-ladowanie { display: grid; justify-items: center; gap: 10px; color: var(--podglad-opis); font-variant-numeric: tabular-nums; }
+  .btn { min-height: 34px; padding: 6px 14px; border-radius: var(--radius-control); background: var(--panel); color: var(--text); border: 1px solid var(--border); font: inherit; cursor: pointer; }
+  .btn-primary { background: var(--accent-solid); color: var(--on-accent); border-color: var(--accent-solid); }
+
+  /* wąskie okno */
+  .ekran.waski .podglad { padding: 0; }
+  .ekran.waski .podglad-okno { border-radius: 0; border: 0; width: 100%; height: 100%; }
+  .ekran.waski .podglad-nav, .ekran.waski .podglad-akcje .pelne, .ekran.waski .podglad-separator, .ekran.waski .podglad-opis { display: none; }
+  .ekran.waski .podglad-wiecej { display: inline-flex; }
+
+  /* ---- treść w ramce (rysuje ramka; tu tylko wygląd) ---- */
+  .r { position: absolute; inset: 0; background: var(--bg); color: var(--text); }
+  .r-narzedzia { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; align-items: center; gap: 2px;
+    padding: 3px; background: color-mix(in srgb, var(--panel) 92%, transparent); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; box-shadow: var(--shadow-sm); }
+  .r-narzedzia button { height: 28px; min-width: 28px; padding: 0 8px; border: 0; border-radius: 7px; background: transparent; color: var(--text); font: inherit; }
+  .r-narzedzia button:hover { background: var(--hover); }
+  .r-narzedzia .wart { padding: 0 6px; min-width: 64px; text-align: center; }
+  .r-obraz { display: grid; place-items: center; height: 100%; }
+  .r-obraz svg { max-width: 82%; max-height: 82%; border-radius: 2px; box-shadow: 0 1px 0 #0003; }
+  .r-pdf { height: 100%; overflow: hidden; display: grid; justify-items: center; align-content: start; gap: 14px; padding-top: 18px; background: color-mix(in srgb, var(--bg) 70%, #000); }
+  .kartka { width: 300px; height: 390px; background: #fff; color: #222; border-radius: 2px; box-shadow: 0 2px 10px #0006; padding: 28px 30px; box-sizing: border-box; font: 9px/1.5 Georgia, serif; }
+  .kartka h3 { font: 600 13px/1.3 Georgia, serif; margin: 0 0 8px; }
+  .kartka .linia { height: 5px; background: #d9d9d9; margin: 6px 0; border-radius: 1px; }
+  .r-arkusz { position: absolute; inset: 0; display: grid; grid-template-rows: 1fr auto; }
+  .siatka { overflow: hidden; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .siatka table { border-collapse: collapse; }
+  .siatka th, .siatka td { border: 1px solid var(--border); padding: 3px 8px; height: 18px; white-space: nowrap; text-align: left; }
+  .siatka th { background: var(--panel); color: var(--muted); font-weight: 500; position: sticky; top: 0; }
+  .siatka th.w { text-align: center; width: 34px; }
+  .siatka td.n { text-align: right; }
+  .zakladki { display: flex; gap: 2px; padding: 4px 8px; border-top: 1px solid var(--border); background: var(--panel); }
+  .zakladki span { padding: 4px 12px; border-radius: 6px; color: var(--muted); }
+  .zakladki span.akt { background: var(--bg); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+  .r-slajdy { position: absolute; inset: 0; display: grid; grid-template-columns: 132px 1fr; }
+  .miniatury { border-right: 1px solid var(--border); padding: 10px; display: grid; gap: 10px; align-content: start; overflow: hidden; background: var(--panel); }
+  .miniatury div { aspect-ratio: 16/9; background: #fff; border-radius: 3px; border: 2px solid transparent; position: relative; }
+  .miniatury div.akt { border-color: var(--accent); }
+  .miniatury div b { position: absolute; left: -2px; top: -2px; font: 10px var(--font-ui); color: var(--muted); transform: translateX(-130%); }
+  .slajd-duzy { display: grid; place-items: center; padding: 24px; }
+  .slajd { width: 100%; max-width: 560px; aspect-ratio: 16/9; background: linear-gradient(160deg, #26324a, #13192a); color: #fff; border-radius: 4px; box-shadow: 0 2px 12px #0006; padding: 34px; box-sizing: border-box; }
+  .slajd h3 { margin: 0 0 12px; font-size: 24px; font-weight: 600; }
+  .slajd li { margin: 4px 0; font-size: 13px; color: #d7dcea; }
+  .r-kod { position: absolute; inset: 0; font: 12.5px/1.6 ui-monospace, "JetBrains Mono", monospace; display: grid; grid-template-columns: 48px 1fr; overflow: hidden; }
+  .r-kod .nr { color: var(--muted); opacity: .6; text-align: right; padding: 10px 10px 0 0; border-right: 1px solid var(--border); white-space: pre; }
+  .r-kod pre { margin: 0; padding: 10px 14px; white-space: pre; }
+  .k { color: var(--accent); } .s { color: var(--success); } .c { color: var(--muted); font-style: italic; } .f { color: #e5c07b; }
+  :root[data-theme="light"] .f { color: #8a5d00; }
+  .r-3d { position: absolute; inset: 0; background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--panel) 100%, #fff 4%), var(--bg)); display: grid; place-items: center; }
+  .r-boczne { position: absolute; right: 12px; top: 12px; width: 168px; padding: 8px; background: color-mix(in srgb, var(--panel) 94%, transparent); border: 1px solid var(--border); border-radius: 10px; font-size: 12px; }
+  .r-boczne h4 { margin: 0 0 6px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .r-boczne label { display: flex; align-items: center; gap: 6px; padding: 3px 2px; }
+  .kolor { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .r-klatka { position: absolute; inset: 0; display: grid; place-items: center; background: #000; }
+  .r-klatka svg { width: 80%; }
+  .etykieta { position: absolute; left: 14px; top: 14px; padding: 3px 8px; border-radius: 6px; background: #000a; color: #fff; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .podglad { animation: podglad-wejscie var(--podglad-czas) var(--ease) both; }
+    @keyframes podglad-wejscie { from { opacity: 0; } }
+  }
+</style>
+</head>
+<body>
+<div class="makieta-naglowek">
+  <h1>Podgląd plików: makiety okna</h1>
+  <button class="btn" type="button" id="motyw">Przełącz motyw</button>
+</div>
+
+<!-- ikony (lucide, ISC): symbole używane niżej -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+  <symbol id="i-sheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 9v12"/><path d="M15 9v12"/></symbol>
+  <symbol id="i-slides" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></symbol>
+  <symbol id="i-wifi-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/></symbol>
+</svg>
+
+<template id="pasek">
+  <header class="podglad-pasek">
+    <svg class="podglad-ikona"><use href="#i-image"/></svg>
+    <div class="podglad-nazwa"><strong data-nazwa title="">Plik</strong><span class="podglad-opis" data-opis>Obraz · 2,4 MB</span></div>
+    <div class="podglad-nav" data-nav>
+      <button class="podglad-przycisk tylko-ikona" type="button" aria-label="Poprzedni plik"><svg><use href="#i-left"/></svg></button>
+      <span class="podglad-licznik" data-licznik>3 z 12</span>
+      <button class="podglad-przycisk tylko-ikona" type="button" aria-label="Następny plik"><svg><use href="#i-right"/></svg></button>
+    </div>
+    <span class="podglad-separator"></span>
+    <div class="podglad-akcje">
+      <button class="podglad-przycisk pelne" type="button" aria-label="Pobierz"><svg><use href="#i-download"/></svg><span class="podglad-etykieta">Pobierz</span></button>
+      <button class="podglad-przycisk pelne" type="button" aria-label="Otwórz"><svg><use href="#i-external"/></svg><span class="podglad-etykieta">Otwórz</span></button>
+      <button class="podglad-przycisk tylko-ikona podglad-wiecej" type="button" aria-label="Więcej"><svg><use href="#i-more"/></svg></button>
+      <button class="podglad-przycisk tylko-ikona" type="button" aria-label="Zamknij"><svg><use href="#i-x"/></svg></button>
+    </div>
+  </header>
+</template>
+
+<main class="makiety">
+  <figure data-ikona="i-image" data-nazwa="Wybrzeże o świcie, Hel, 2026-08-14.jpg" data-opis="Obraz · 8000 × 6000 · 6,1 MB" data-licznik="1 z 19">
+    <figcaption>Obraz: dopasowany, przybliżanie kółkiem, + / −, „100%” i „Dopasuj”</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"><p>Notatka „Załączniki — test”</p></div>
+      <div class="podglad" role="dialog" aria-modal="true" aria-label="Podgląd: Wybrzeże o świcie"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r"><div class="r-obraz">
+          <svg viewBox="0 0 400 300" role="img" aria-label="obraz"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c38b"/><stop offset=".55" stop-color="#e9877d"/><stop offset="1" stop-color="#3c5b7a"/></linearGradient></defs><rect width="400" height="300" fill="url(#g1)"/><circle cx="290" cy="150" r="34" fill="#ffe7b0"/><path d="M0 190 Q100 170 200 190 T400 185 V300 H0Z" fill="#2a4560"/><path d="M0 230 Q120 210 230 228 T400 222 V300 H0Z" fill="#1d3247"/></svg>
+        </div>
+        <div class="r-narzedzia" role="toolbar" aria-label="Przybliżenie"><button aria-label="Oddal">−</button><span class="wart">34%</span><button aria-label="Przybliż">+</button><button>100%</button><button>Dopasuj</button></div></div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-file-text" data-nazwa="Sprawozdanie roczne 2026 — wersja do podpisu (ostateczna, poprawiona po uwagach zarządu).pdf" data-opis="PDF · 2,4 MB" data-licznik="2 z 19">
+    <figcaption>PDF: strony w pionie, numer strony, przybliżanie; długa nazwa ucięta w środku</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r r-pdf">
+          <div class="kartka"><h3>Sprawozdanie roczne 2026</h3><div class="linia"></div><div class="linia" style="width:90%"></div><div class="linia" style="width:95%"></div><div class="linia" style="width:60%"></div><br><div class="linia"></div><div class="linia" style="width:88%"></div><div class="linia" style="width:93%"></div><div class="linia" style="width:70%"></div></div>
+          <div class="kartka"></div>
+          <div class="r-narzedzia"><button aria-label="Oddal">−</button><span class="wart">Strona 1 z 9</span><button aria-label="Przybliż">+</button><button>Dopasuj</button></div>
+        </div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-sheet" data-nazwa="Budżet działu 2027.xlsx" data-opis="Arkusz · 84 KB" data-licznik="5 z 19">
+    <figcaption>XLSX: siatka z nagłówkami kolumn i wierszy, zakładki arkuszy na dole</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r r-arkusz">
+          <div class="siatka"><table><thead><tr><th class="w"></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr></thead><tbody>
+            <tr><th class="w">1</th><td><b>Pozycja</b></td><td><b>I kw.</b></td><td><b>II kw.</b></td><td><b>III kw.</b></td><td><b>Razem</b></td></tr>
+            <tr><th class="w">2</th><td>Wynagrodzenia</td><td class="n">184 200,00 zł</td><td class="n">186 900,00 zł</td><td class="n">191 400,00 zł</td><td class="n">562 500,00 zł</td></tr>
+            <tr><th class="w">3</th><td>Najem biura</td><td class="n">36 000,00 zł</td><td class="n">36 000,00 zł</td><td class="n">37 800,00 zł</td><td class="n">109 800,00 zł</td></tr>
+            <tr><th class="w">4</th><td>Szkolenia</td><td class="n">7 450,00 zł</td><td class="n">12 300,00 zł</td><td class="n">3 100,00 zł</td><td class="n">22 850,00 zł</td></tr>
+            <tr><th class="w">5</th><td>Sprzęt</td><td class="n">21 990,00 zł</td><td class="n">4 380,00 zł</td><td class="n">9 700,00 zł</td><td class="n">36 070,00 zł</td></tr>
+            <tr><th class="w">6</th><td>Podróże</td><td class="n">5 210,00 zł</td><td class="n">8 940,00 zł</td><td class="n">6 020,00 zł</td><td class="n">20 170,00 zł</td></tr>
+            <tr><th class="w">7</th><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><th class="w">8</th><td><b>Suma</b></td><td class="n">254 850,00 zł</td><td class="n">248 520,00 zł</td><td class="n">248 020,00 zł</td><td class="n"><b>751 390,00 zł</b></td></tr>
+          </tbody></table></div>
+          <nav class="zakladki" aria-label="Arkusze"><span class="akt">Plan</span><span>Wykonanie</span><span>Słowniki</span></nav>
+        </div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-slides" data-nazwa="Kickoff projektu Hel.pptx" data-opis="Prezentacja · 3,8 MB" data-licznik="6 z 19">
+    <figcaption>PPTX: slajd duży, pasek miniatur, ← → między slajdami</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r r-slajdy">
+          <div class="miniatury" aria-label="Slajdy"><div class="akt"></div><div></div><div></div><div></div></div>
+          <div class="slajd-duzy"><div class="slajd"><h3>Projekt Hel: start</h3><ul><li>Cel: nowa przystań do maja 2027</li><li>Zespół: 6 osób, 3 firmy</li><li>Pierwszy kamień milowy: 15 stycznia</li></ul></div></div>
+          <div class="r-narzedzia" style="left:calc(50% + 66px)"><button aria-label="Poprzedni slajd">‹</button><span class="wart">Slajd 1 z 14</span><button aria-label="Następny slajd">›</button></div>
+        </div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-code" data-nazwa="import_klientow.py" data-opis="Kod · 3 KB" data-licznik="9 z 19">
+    <figcaption>Kod: tylko do odczytu, numery linii, podświetlanie, zawijanie przełączane</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r r-kod">
+<div class="nr">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</div><pre><span class="c"># Wczytuje listę klientów z eksportu CSV.</span>
+<span class="k">import</span> csv
+<span class="k">from</span> pathlib <span class="k">import</span> Path
+
+<span class="k">def</span> <span class="f">wczytaj</span>(plik: Path) -&gt; list[dict]:
+    <span class="k">with</span> plik.open(encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> f:
+        <span class="k">return</span> [w <span class="k">for</span> w <span class="k">in</span> csv.DictReader(f, delimiter=<span class="s">";"</span>)]
+
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    print(len(wczytaj(Path(<span class="s">"klienci.csv"</span>))))</pre>
+          <div class="r-narzedzia"><button aria-pressed="false">Zawijaj wiersze</button></div>
+        </div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-box" data-nazwa="obudowa_czujnika_v3.glb" data-opis="Model 3D · 1,2 MB" data-licznik="11 z 19">
+    <figcaption>3D: obracanie, przybliżanie, „Wyśrodkuj”, siatka (rysunek zamiast WebGL)</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r r-3d">
+          <svg viewBox="0 0 300 220" width="320" aria-hidden="true"><g stroke="var(--border)" stroke-width="1"><path d="M30 170 L150 210 L270 170 L150 130Z" fill="none"/><path d="M90 150 L210 190 M60 160 L180 200 M120 140 L240 180 M210 150 L90 190 M240 160 L120 200 M180 140 L60 180"/></g><path d="M150 40 L225 80 L225 150 L150 190 L75 150 L75 80Z" fill="#8f9bb3"/><path d="M150 40 L225 80 L150 120 L75 80Z" fill="#c3cbdb"/><path d="M150 120 L225 80 L225 150 L150 190Z" fill="#6c7891"/><circle cx="150" cy="80" r="14" fill="#56617a"/></svg>
+          <div class="r-narzedzia"><button>Wyśrodkuj</button><button aria-pressed="true">Siatka</button></div>
+        </div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-video" data-nazwa="Odbiór budynku B — nagranie z drona.mp4" data-opis="Wideo · 84 MB" data-licznik="14 z 19">
+    <figcaption>Wideo: tylko pierwsza klatka z etykietą i długością; „Otwórz” odtwarza jak dziś</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r r-klatka">
+          <svg viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" fill="#5d7d98"/><rect y="110" width="320" height="70" fill="#4b5b3c"/><rect x="110" y="62" width="100" height="62" fill="#c9c1b3"/><rect x="118" y="72" width="14" height="12" fill="#3d4d60"/><rect x="142" y="72" width="14" height="12" fill="#3d4d60"/><rect x="166" y="72" width="14" height="12" fill="#3d4d60"/><rect x="190" y="72" width="14" height="12" fill="#3d4d60"/><rect x="104" y="56" width="112" height="8" fill="#8f877a"/></svg>
+          <span class="etykieta">Pierwsza klatka · 2:47</span>
+        </div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-file" data-nazwa="instalator_drukarki.exe" data-opis="Inny · 18 MB" data-licznik="17 z 19">
+    <figcaption>Format bez podglądu: karta z „Pobierz”</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="podglad-stan"><div class="podglad-karta">
+          <svg class="duza-ikona"><use href="#i-file"/></svg>
+          <h2>instalator_drukarki.exe</h2>
+          <p>Inny · 18 MB</p>
+          <p>Tego rodzaju pliku nie da się podejrzeć.</p>
+          <div class="akcje"><button class="btn btn-primary" type="button">Pobierz</button></div>
+        </div></div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-file-text" data-nazwa="Umowa najmu — skan.pdf" data-opis="PDF · 12,4 MB" data-licznik="3 z 19">
+    <figcaption>Ładowanie: pobieranie i odszyfrowywanie z postępem w MB</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="podglad-stan" role="status" aria-live="polite"><div class="podglad-ladowanie">
+          <span>Pobieranie i odszyfrowywanie…</span>
+          <div class="podglad-postep" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25"><span style="width:25%"></span></div>
+          <span>3,1 z 12,4 MB</span>
+        </div></div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-file-text" data-nazwa="faktura_uszkodzona.pdf" data-opis="PDF · 210 KB" data-licznik="18 z 19">
+    <figcaption>Błąd: krótki powód i „Pobierz”, bez szczegółów technicznych</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="podglad-stan" role="status"><div class="podglad-karta is-blad">
+          <svg class="duza-ikona"><use href="#i-alert"/></svg>
+          <h2>Nie można wyświetlić tego pliku</h2>
+          <p>Plik jest uszkodzony albo ma nieznany format.</p>
+          <div class="akcje"><button class="btn btn-primary" type="button">Pobierz</button></div>
+        </div></div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-file-text" data-nazwa="Protokół z odbioru.docx" data-opis="Dokument · 640 KB" data-licznik="4 z 19">
+    <figcaption>Brak sieci: jak w PLIKI §6</figcaption>
+    <div class="ekran"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="podglad-stan" role="status"><div class="podglad-karta">
+          <svg class="duza-ikona"><use href="#i-wifi-off"/></svg>
+          <h2>Plik jest niedostępny bez połączenia</h2>
+          <p>Połącz się z internetem i spróbuj ponownie.</p>
+          <div class="akcje"><button class="btn btn-primary" type="button">Spróbuj ponownie</button></div>
+        </div></div></div>
+      </div></div>
+    </div>
+  </figure>
+
+  <figure data-ikona="i-file-text" data-nazwa="Raport z przeglądu instalacji elektrycznej — budynek B, piętro 3.pdf" data-opis="PDF · 2,4 MB" data-licznik="2 z 19">
+    <figcaption>Wąskie okno (375 px): cały ekran, nazwa, „⋯” i Zamknij; strzałki jako gest</figcaption>
+    <div class="ekran waski"><div class="aplikacja-pod"></div>
+      <div class="podglad"><div class="podglad-okno"><div data-pasek></div>
+        <div class="podglad-tresc"><div class="r r-pdf">
+          <div class="kartka" style="width:280px;height:364px"><h3>Raport z przeglądu</h3><div class="linia"></div><div class="linia" style="width:90%"></div><div class="linia" style="width:95%"></div><div class="linia" style="width:60%"></div></div>
+          <div class="r-narzedzia"><button aria-label="Oddal">−</button><span class="wart">Strona 1 z 4</span><button aria-label="Przybliż">+</button></div>
+        </div></div>
+      </div></div>
+    </div>
+  </figure>
+</main>
+
+<script>
+  // Jedyny skrypt makiety: przełącznik motywu i wstawienie wspólnego paska.
+  const pasek = document.getElementById("pasek");
+  for (const fig of document.querySelectorAll("figure")) {
+    const slot = fig.querySelector("[data-pasek]");
+    const p = pasek.content.cloneNode(true);
+    const name = fig.dataset.nazwa;
+    // nazwa ucięta w środku: początek…koniec.rozszerzenie
+    const dot = name.lastIndexOf(".");
+    const ext = dot > 0 ? name.slice(dot) : "";
+    const stem = dot > 0 ? name.slice(0, dot) : name;
+    const max = fig.querySelector(".waski") ? 22 : 48;
+    const short = stem.length + ext.length > max ? stem.slice(0, Math.ceil((max - ext.length - 1) * 0.6)) + "…" + stem.slice(-Math.floor((max - ext.length - 1) * 0.4)) + ext : name;
+    p.querySelector("[data-nazwa]").textContent = short;
+    p.querySelector("[data-nazwa]").title = name;
+    p.querySelector("[data-opis]").textContent = fig.dataset.opis;
+    p.querySelector("[data-licznik]").textContent = fig.dataset.licznik;
+    p.querySelector(".podglad-ikona use").setAttribute("href", "#" + fig.dataset.ikona);
+    slot.replaceWith(p);
+  }
+  document.getElementById("motyw").addEventListener("click", () => {
+    const r = document.documentElement;
+    r.dataset.theme = r.dataset.theme === "light" ? "dark" : "light";
+  });
+</script>
+</body>
+</html>

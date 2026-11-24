@@ -1,0 +1,327 @@
+/* Files on the server (docs/PLIKI.md §1): the embeds in Live Preview and the reading view, and the upload widget. */
+
+.file-embed {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+  margin: 6px 0;
+}
+
+.file-image {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.file-image img,
+.file-embed > img.embed-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
+.file-resize {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: var(--accent);
+  cursor: nwse-resize;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease);
+}
+
+/* The image controls: size, ratio and placement. They show on hover and focus, so the note stays clean. */
+.file-controls {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 8px);
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 0.8em;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease);
+  pointer-events: none;
+}
+
+.file-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+}
+
+/* the panel's empty areas pass the pointer to the picture (a drag of a small picture); its fields stay usable */
+.file-controls input,
+.file-controls select {
+  pointer-events: auto;
+}
+
+.file-controls input[type="number"],
+.file-controls select {
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+}
+
+.file-controls input[type="number"] {
+  width: 5em;
+}
+
+.file-embed:hover .file-resize,
+.file-embed:hover .file-controls,
+.file-embed:focus-within .file-resize,
+.file-embed:focus-within .file-controls {
+  opacity: 1;
+}
+
+/* The picture is dragged left and right when it is placed (its position): the grab cursor says so. */
+.file-embed img.embed-image {
+  cursor: grab;
+}
+
+/* An exact height: the picture keeps its proportions inside the box when the note is narrower than it. */
+img.embed-exact {
+  object-fit: contain;
+}
+
+/* Placement (the alias's align, docs/PLIKI.md §1). In the editor a wrap is the block on its side (alignClasses). */
+.file-align-left,
+.file-align-center,
+.file-align-right {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.file-align-left {
+  margin: 6px auto 6px 0;
+}
+
+.file-align-center {
+  margin: 6px auto;
+}
+
+.file-align-right {
+  margin: 6px 0 6px auto;
+}
+
+.file-align-wrap-left {
+  float: left;
+  max-width: 50%;
+  margin: 4px 16px 8px 0;
+}
+
+.file-align-wrap-right {
+  float: right;
+  max-width: 50%;
+  margin: 4px 0 8px 16px;
+}
+
+.file-chip {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--hover);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 0.9em;
+}
+
+.file-kind {
+  color: var(--muted);
+  font-size: 0.75em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.file-download,
+.file-open,
+.file-show,
+.file-upload button {
+  padding: 2px 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.file-download {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.file-size {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.file-image-box {
+  position: relative;
+  display: block;
+  max-width: 100%;
+}
+
+.file-image-box [hidden] {
+  display: none !important;
+}
+
+/* A position (alias `pozN`, N 0..50): the line is laid out so the picture's left edge is N/50 of the room beside it.
+   Two spacers share the room in the ratio N : 50-N (flex-grow), so the picture needs no measuring. */
+.file-pos {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+}
+
+.file-pos::before,
+.file-pos::after {
+  content: "";
+  flex-basis: 0;
+}
+
+.file-pos::before {
+  flex-grow: var(--pos);
+}
+
+.file-pos::after {
+  flex-grow: calc(50 - var(--pos));
+}
+
+.file-show {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--hover);
+  color: var(--text);
+  font: inherit;
+  font-family: var(--font-ui);
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.file-note {
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+.file-upload {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-control);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 0.9em;
+}
+
+.file-upload [hidden] {
+  display: none;
+}
+
+.file-upload-name {
+  max-width: 16em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-upload-bar {
+  width: 8em;
+  max-width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--hover);
+}
+
+.file-upload-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width var(--duration-fast) var(--ease);
+}
+
+.file-upload-pct {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.file-upload-error {
+  flex-basis: 100%;
+  color: var(--danger);
+}
+
+.file-preview .file-full,
+.file-preview .file-media {
+  display: block;
+  max-width: 100%;
+  max-height: 80vh;
+  margin: 0 auto;
+}
+
+.file-preview .file-text {
+  max-height: 70vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-family: var(--font-text);
+}
+
+@media (max-width: 600px) {
+  .file-embed {
+    max-width: 100%;
+  }
+
+  .file-align-wrap-left,
+  .file-align-wrap-right {
+    float: none;
+    max-width: 100%;
+    margin: 6px 0;
+  }
+
+  .file-controls {
+    position: static;
+    margin-top: 4px;
+    opacity: 1;
+  }
+
+  .file-resize {
+    opacity: 1;
+  }
+}

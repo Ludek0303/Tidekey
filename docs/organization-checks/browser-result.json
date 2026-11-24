@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    "groups",
+    "calendar create",
+    "inventory issue/return",
+    "availability save",
+    "task assignment/completion",
+    "activity",
+    "notifications",
+    "graph task nodes"
+  ]
+}

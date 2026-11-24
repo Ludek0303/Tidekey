@@ -1,0 +1,201 @@
+Id;Imię;Nazwisko;Miasto;Adres;Kwota zł;Data;Status
+1;Anna;Wiśniewski;Poznań;ul. Długa 84;3405,63;05.07.2026;nowy
+2;Żaneta;Dąbrowski;Gdańsk;ul. Długa 8;997,02;12.10.2026;aktywny
+3;Piotr;Górska;Gdańsk;ul. Długa 31;4557,10;14.02.2026;nowy
+4;Mateusz;Kowalska;Świdnica;ul. Długa 81;1308,15;08.11.2026;nowy
+5;Żaneta;Zieliński;Kraków;ul. Długa 6;4169,49;02.04.2026;zawieszony
+6;Małgorzata;Zieliński;Gdańsk;ul. Długa 74;1522,62;18.02.2026;nowy
+7;Piotr;Wiśniewski;Świdnica;ul. Długa 48;5999,51;21.04.2026;aktywny
+8;Żaneta;Górska;Poznań;ul. Długa 88;6500,78;07.08.2026;zawieszony
+9;Małgorzata;Dąbrowski;Poznań;ul. Długa 47;4892,18;19.08.2026;aktywny
+10;Mateusz;Szymańska;Świdnica;ul. Długa 11;7339,48;25.04.2026;zawieszony
+11;Małgorzata;Wiśniewski;Gdańsk;ul. Długa 58;9186,48;11.12.2026;nowy
+12;Tomasz;Górska;Gdańsk;ul. Długa 20;4394,33;06.06.2026;nowy
+13;Jędrzej;Król;Zielona Góra;ul. Długa 74;823,90;25.09.2026;zawieszony
+14;Piotr;Wiśniewski;Kraków;ul. Długa 59;6242,41;16.10.2026;zawieszony
+15;Małgorzata;Mazur;Kraków;ul. Długa 8;7319,01;22.02.2026;nowy
+16;Tomasz;Król;Łódź;ul. Długa 3;4055,31;22.06.2026;nowy
+17;Małgorzata;Zieliński;Zielona Góra;"ul. Długa 28; lok. 2";1237,83;16.01.2026;aktywny
+18;Zofia;Mazur;Wrocław;ul. Długa 11;4182,25;13.08.2026;nowy
+19;Małgorzata;Górska;Kraków;ul. Długa 71;2923,35;05.07.2026;nowy
+20;Piotr;Zieliński;Łódź;ul. Długa 20;9281,43;13.04.2026;aktywny
+21;Mateusz;Zieliński;Kraków;ul. Długa 63;6915,04;08.01.2026;zawieszony
+22;Jędrzej;Król;Łódź;ul. Długa 69;52,92;05.07.2026;nowy
+23;Anna;Mazur;Poznań;ul. Długa 84;9019,38;17.10.2026;nowy
+24;Ewa;Górska;Gdańsk;ul. Długa 51;8376,30;18.07.2026;zawieszony
+25;Piotr;Dąbrowski;Wrocław;ul. Długa 25;6661,00;13.01.2026;aktywny
+26;Piotr;Kowalska;Świdnica;ul. Długa 7;1162,68;11.10.2026;aktywny
+27;Anna;Wiśniewski;Poznań;ul. Długa 79;5636,85;04.06.2026;aktywny
+28;Małgorzata;Król;Świdnica;ul. Długa 82;6448,98;13.03.2026;zawieszony
+29;Tomasz;Mazur;Wrocław;ul. Długa 63;4981,83;04.02.2026;zawieszony
+30;Jędrzej;Szymańska;Wrocław;ul. Długa 96;910,56;05.02.2026;nowy
+31;Żaneta;Król;Łódź;ul. Długa 27;1702,80;17.01.2026;nowy
+32;Piotr;Szymańska;Świdnica;ul. Długa 39;5705,57;01.09.2026;zawieszony
+33;Łukasz;Król;Zielona Góra;ul. Długa 99;9533,78;06.06.2026;aktywny
+34;Ewa;Dąbrowski;Łódź;"ul. Długa 31; lok. 2";6440,16;26.04.2026;nowy
+35;Anna;Szymańska;Wrocław;ul. Długa 4;5177,19;12.12.2026;zawieszony
+36;Tomasz;Król;Kraków;ul. Długa 45;2040,51;23.10.2026;aktywny
+37;Łukasz;Król;Łódź;ul. Długa 61;2321,71;04.04.2026;zawieszony
+38;Jędrzej;Wiśniewski;Poznań;ul. Długa 62;6553,81;20.01.2026;nowy
+39;Łukasz;Mazur;Łódź;ul. Długa 97;1267,28;13.12.2026;zawieszony
+40;Ewa;Mazur;Wrocław;ul. Długa 12;8284,68;21.06.2026;nowy
+41;Zofia;Zieliński;Gdańsk;ul. Długa 21;9937,88;03.12.2026;aktywny
+42;Mateusz;Mazur;Zielona Góra;ul. Długa 19;6205,11;15.11.2026;zawieszony
+43;Anna;Kowalska;Poznań;ul. Długa 17;1644,86;18.09.2026;nowy
+44;Zofia;Górska;Poznań;ul. Długa 96;6822,33;04.09.2026;aktywny
+45;Małgorzata;Dąbrowski;Kraków;ul. Długa 4;8672,86;28.04.2026;nowy
+46;Małgorzata;Górska;Poznań;ul. Długa 42;2532,23;25.10.2026;aktywny
+47;Mateusz;Górska;Poznań;ul. Długa 59;648,63;24.06.2026;nowy
+48;Żaneta;Kowalska;Poznań;ul. Długa 68;1381,15;18.03.2026;zawieszony
+49;Zofia;Zieliński;Łódź;ul. Długa 1;8152,25;06.10.2026;zawieszony
+50;Anna;Król;Zielona Góra;ul. Długa 72;6501,74;24.02.2026;nowy
+51;Żaneta;Kowalska;Łódź;"ul. Długa 14; lok. 2";5575,06;18.08.2026;aktywny
+52;Tomasz;Kowalska;Poznań;ul. Długa 65;2913,68;02.02.2026;aktywny
+53;Mateusz;Dąbrowski;Zielona Góra;ul. Długa 65;4657,79;11.10.2026;zawieszony
+54;Żaneta;Dąbrowski;Zielona Góra;ul. Długa 62;4753,18;17.09.2026;nowy
+55;Tomasz;Zieliński;Wrocław;ul. Długa 26;9201,14;09.09.2026;aktywny
+56;Łukasz;Górska;Gdańsk;ul. Długa 10;4124,23;15.06.2026;aktywny
+57;Jędrzej;Zieliński;Kraków;ul. Długa 20;7029,92;10.02.2026;aktywny
+58;Ewa;Mazur;Łódź;ul. Długa 13;4914,56;08.12.2026;nowy
+59;Ewa;Górska;Kraków;ul. Długa 91;8738,81;08.03.2026;zawieszony
+60;Jędrzej;Kowalska;Kraków;ul. Długa 12;2062,53;12.06.2026;nowy
+61;Ewa;Król;Świdnica;ul. Długa 3;4819,51;15.12.2026;nowy
+62;Łukasz;Wiśniewski;Gdańsk;ul. Długa 15;3108,06;17.02.2026;zawieszony
+63;Zofia;Górska;Poznań;ul. Długa 35;2861,29;02.03.2026;nowy
+64;Żaneta;Mazur;Zielona Góra;ul. Długa 20;8597,61;09.07.2026;zawieszony
+65;Zofia;Górska;Gdańsk;ul. Długa 89;948,07;09.01.2026;zawieszony
+66;Małgorzata;Wiśniewski;Świdnica;ul. Długa 12;9849,30;01.11.2026;aktywny
+67;Anna;Król;Świdnica;ul. Długa 59;708,58;09.02.2026;zawieszony
+68;Anna;Dąbrowski;Gdańsk;"ul. Długa 17; lok. 2";9726,83;09.10.2026;aktywny
+69;Małgorzata;Szymańska;Świdnica;ul. Długa 26;2756,17;02.03.2026;aktywny
+70;Zofia;Szymańska;Kraków;ul. Długa 87;3050,45;15.09.2026;aktywny
+71;Żaneta;Dąbrowski;Świdnica;ul. Długa 3;2636,14;02.01.2026;zawieszony
+72;Ewa;Mazur;Świdnica;ul. Długa 85;2586,13;15.02.2026;zawieszony
+73;Łukasz;Król;Łódź;ul. Długa 28;5322,98;10.12.2026;nowy
+74;Jędrzej;Kowalska;Poznań;ul. Długa 52;7652,48;21.03.2026;aktywny
+75;Małgorzata;Górska;Łódź;ul. Długa 95;159,47;03.11.2026;aktywny
+76;Małgorzata;Dąbrowski;Zielona Góra;ul. Długa 65;895,88;22.07.2026;zawieszony
+77;Małgorzata;Mazur;Gdańsk;ul. Długa 21;484,34;15.03.2026;zawieszony
+78;Łukasz;Kowalska;Kraków;ul. Długa 42;3828,29;11.09.2026;aktywny
+79;Ewa;Wiśniewski;Wrocław;ul. Długa 43;3749,05;06.01.2026;zawieszony
+80;Żaneta;Kowalska;Gdańsk;ul. Długa 32;5281,86;21.04.2026;zawieszony
+81;Mateusz;Kowalska;Wrocław;ul. Długa 52;8577,33;03.03.2026;aktywny
+82;Piotr;Zieliński;Zielona Góra;ul. Długa 30;3152,01;10.11.2026;nowy
+83;Jędrzej;Mazur;Łódź;ul. Długa 98;8231,26;20.07.2026;zawieszony
+84;Anna;Górska;Zielona Góra;ul. Długa 19;7603,32;20.11.2026;nowy
+85;Żaneta;Kowalska;Poznań;"ul. Długa 68; lok. 2";8526,73;17.03.2026;nowy
+86;Łukasz;Wiśniewski;Gdańsk;ul. Długa 88;6134,32;26.12.2026;aktywny
+87;Ewa;Mazur;Świdnica;ul. Długa 14;1405,58;21.06.2026;aktywny
+88;Łukasz;Mazur;Kraków;ul. Długa 69;6592,61;01.11.2026;aktywny
+89;Żaneta;Wiśniewski;Zielona Góra;ul. Długa 96;4801,45;26.02.2026;nowy
+90;Małgorzata;Wiśniewski;Poznań;ul. Długa 61;702,58;24.12.2026;zawieszony
+91;Tomasz;Mazur;Poznań;ul. Długa 30;2471,90;24.04.2026;zawieszony
+92;Anna;Dąbrowski;Gdańsk;ul. Długa 37;814,67;16.11.2026;nowy
+93;Małgorzata;Zieliński;Gdańsk;ul. Długa 84;1555,86;11.05.2026;zawieszony
+94;Piotr;Dąbrowski;Zielona Góra;ul. Długa 87;646,07;16.05.2026;zawieszony
+95;Tomasz;Mazur;Wrocław;ul. Długa 37;3059,85;23.09.2026;aktywny
+96;Piotr;Mazur;Gdańsk;ul. Długa 40;9380,73;18.04.2026;zawieszony
+97;Małgorzata;Górska;Łódź;ul. Długa 58;4822,65;03.09.2026;aktywny
+98;Żaneta;Szymańska;Kraków;ul. Długa 19;792,37;19.02.2026;aktywny
+99;Małgorzata;Wiśniewski;Zielona Góra;ul. Długa 66;6336,74;27.11.2026;zawieszony
+100;Anna;Zieliński;Gdańsk;ul. Długa 51;2436,23;16.08.2026;zawieszony
+101;Zofia;Górska;Kraków;ul. Długa 39;7156,96;15.07.2026;zawieszony
+102;Jędrzej;Król;Poznań;"ul. Długa 1; lok. 2";3324,31;04.06.2026;zawieszony
+103;Małgorzata;Szymańska;Kraków;ul. Długa 2;1268,72;07.12.2026;aktywny
+104;Jędrzej;Górska;Poznań;ul. Długa 10;4129,84;13.10.2026;zawieszony
+105;Anna;Szymańska;Zielona Góra;ul. Długa 14;8967,51;02.05.2026;aktywny
+106;Jędrzej;Dąbrowski;Poznań;ul. Długa 66;2624,35;09.07.2026;zawieszony
+107;Ewa;Dąbrowski;Zielona Góra;ul. Długa 98;8242,81;14.01.2026;aktywny
+108;Mateusz;Zieliński;Zielona Góra;ul. Długa 58;528,79;24.07.2026;zawieszony
+109;Zofia;Mazur;Wrocław;ul. Długa 17;5101,62;02.09.2026;zawieszony
+110;Małgorzata;Górska;Zielona Góra;ul. Długa 95;2964,32;10.05.2026;aktywny
+111;Ewa;Wiśniewski;Łódź;ul. Długa 86;3164,49;16.09.2026;nowy
+112;Tomasz;Dąbrowski;Wrocław;ul. Długa 65;1705,09;03.04.2026;zawieszony
+113;Żaneta;Dąbrowski;Łódź;ul. Długa 18;7971,29;15.07.2026;aktywny
+114;Jędrzej;Dąbrowski;Kraków;ul. Długa 12;1841,81;11.09.2026;zawieszony
+115;Ewa;Górska;Wrocław;ul. Długa 3;8496,73;19.04.2026;nowy
+116;Jędrzej;Kowalska;Wrocław;ul. Długa 35;5506,30;07.07.2026;zawieszony
+117;Żaneta;Dąbrowski;Gdańsk;ul. Długa 88;6031,77;12.03.2026;zawieszony
+118;Tomasz;Górska;Kraków;ul. Długa 52;9413,52;08.07.2026;aktywny
+119;Tomasz;Mazur;Gdańsk;"ul. Długa 91; lok. 2";1344,28;02.07.2026;aktywny
+120;Tomasz;Dąbrowski;Poznań;ul. Długa 60;4115,39;27.09.2026;aktywny
+121;Piotr;Mazur;Gdańsk;ul. Długa 67;2356,71;05.03.2026;nowy
+122;Łukasz;Kowalska;Zielona Góra;ul. Długa 17;8155,98;02.01.2026;nowy
+123;Żaneta;Górska;Zielona Góra;ul. Długa 33;3195,38;05.11.2026;aktywny
+124;Mateusz;Dąbrowski;Wrocław;ul. Długa 68;1052,75;03.05.2026;zawieszony
+125;Anna;Szymańska;Wrocław;ul. Długa 1;2354,43;26.10.2026;zawieszony
+126;Żaneta;Dąbrowski;Świdnica;ul. Długa 61;3327,24;21.04.2026;aktywny
+127;Małgorzata;Kowalska;Gdańsk;ul. Długa 84;317,03;14.12.2026;aktywny
+128;Piotr;Szymańska;Łódź;ul. Długa 54;5235,16;22.11.2026;nowy
+129;Anna;Król;Zielona Góra;ul. Długa 64;4459,34;12.04.2026;zawieszony
+130;Anna;Szymańska;Zielona Góra;ul. Długa 26;3809,19;22.07.2026;nowy
+131;Małgorzata;Dąbrowski;Łódź;ul. Długa 26;717,08;07.08.2026;zawieszony
+132;Mateusz;Mazur;Świdnica;ul. Długa 14;2331,99;09.05.2026;aktywny
+133;Anna;Zieliński;Wrocław;ul. Długa 54;9410,23;08.08.2026;aktywny
+134;Ewa;Kowalska;Zielona Góra;ul. Długa 19;2242,93;01.10.2026;aktywny
+135;Jędrzej;Wiśniewski;Gdańsk;ul. Długa 92;1940,47;13.08.2026;aktywny
+136;Żaneta;Mazur;Gdańsk;"ul. Długa 84; lok. 2";3462,36;07.03.2026;zawieszony
+137;Jędrzej;Mazur;Łódź;ul. Długa 48;6977,05;24.07.2026;aktywny
+138;Jędrzej;Górska;Gdańsk;ul. Długa 11;40,10;03.05.2026;nowy
+139;Małgorzata;Górska;Gdańsk;ul. Długa 46;7966,64;07.07.2026;aktywny
+140;Żaneta;Mazur;Łódź;ul. Długa 48;7405,15;16.04.2026;zawieszony
+141;Ewa;Dąbrowski;Poznań;ul. Długa 4;3829,42;24.08.2026;nowy
+142;Anna;Mazur;Gdańsk;ul. Długa 49;8049,09;13.01.2026;aktywny
+143;Mateusz;Król;Kraków;ul. Długa 9;2705,00;07.12.2026;zawieszony
+144;Jędrzej;Szymańska;Kraków;ul. Długa 34;3522,42;20.01.2026;aktywny
+145;Piotr;Kowalska;Poznań;ul. Długa 82;7576,23;25.10.2026;aktywny
+146;Ewa;Szymańska;Wrocław;ul. Długa 60;1134,71;16.12.2026;zawieszony
+147;Małgorzata;Zieliński;Świdnica;ul. Długa 2;1401,53;16.03.2026;aktywny
+148;Jędrzej;Wiśniewski;Świdnica;ul. Długa 59;3447,23;28.06.2026;aktywny
+149;Ewa;Wiśniewski;Zielona Góra;ul. Długa 32;4117,11;25.03.2026;aktywny
+150;Zofia;Górska;Gdańsk;ul. Długa 42;5060,88;18.09.2026;aktywny
+151;Piotr;Górska;Wrocław;ul. Długa 27;2787,58;20.02.2026;nowy
+152;Ewa;Mazur;Świdnica;ul. Długa 18;4696,74;06.04.2026;nowy
+153;Piotr;Szymańska;Kraków;"ul. Długa 86; lok. 2";2473,45;24.09.2026;zawieszony
+154;Małgorzata;Dąbrowski;Wrocław;ul. Długa 33;5954,21;09.06.2026;aktywny
+155;Małgorzata;Dąbrowski;Kraków;ul. Długa 20;1957,58;08.04.2026;aktywny
+156;Żaneta;Dąbrowski;Zielona Góra;ul. Długa 65;4163,09;09.04.2026;aktywny
+157;Anna;Mazur;Poznań;ul. Długa 14;6860,62;15.01.2026;aktywny
+158;Małgorzata;Dąbrowski;Gdańsk;ul. Długa 6;8823,87;15.06.2026;aktywny
+159;Piotr;Król;Świdnica;ul. Długa 25;1997,81;20.10.2026;aktywny
+160;Anna;Wiśniewski;Zielona Góra;ul. Długa 86;4719,30;20.05.2026;nowy
+161;Anna;Król;Kraków;ul. Długa 28;7451,80;20.06.2026;aktywny
+162;Mateusz;Dąbrowski;Poznań;ul. Długa 5;473,11;07.05.2026;aktywny
+163;Jędrzej;Zieliński;Świdnica;ul. Długa 87;8596,08;11.07.2026;zawieszony
+164;Żaneta;Mazur;Gdańsk;ul. Długa 64;827,20;07.01.2026;zawieszony
+165;Żaneta;Zieliński;Zielona Góra;ul. Długa 85;1073,12;26.07.2026;nowy
+166;Małgorzata;Górska;Kraków;ul. Długa 51;965,80;21.03.2026;nowy
+167;Mateusz;Król;Wrocław;ul. Długa 40;3235,37;14.01.2026;zawieszony
+168;Łukasz;Górska;Zielona Góra;ul. Długa 83;200,97;28.06.2026;zawieszony
+169;Ewa;Wiśniewski;Poznań;ul. Długa 21;2145,60;01.07.2026;aktywny
+170;Zofia;Zieliński;Gdańsk;"ul. Długa 59; lok. 2";4269,50;19.06.2026;aktywny
+171;Piotr;Król;Zielona Góra;ul. Długa 51;5793,39;05.11.2026;nowy
+172;Zofia;Zieliński;Gdańsk;ul. Długa 37;1810,25;05.06.2026;aktywny
+173;Zofia;Kowalska;Wrocław;ul. Długa 39;4033,75;16.04.2026;zawieszony
+174;Piotr;Zieliński;Zielona Góra;ul. Długa 50;569,67;20.11.2026;aktywny
+175;Tomasz;Zieliński;Świdnica;ul. Długa 26;6522,21;13.10.2026;aktywny
+176;Ewa;Król;Gdańsk;ul. Długa 21;447,38;13.09.2026;aktywny
+177;Żaneta;Kowalska;Zielona Góra;ul. Długa 6;2600,60;24.04.2026;zawieszony
+178;Żaneta;Szymańska;Zielona Góra;ul. Długa 59;1244,49;13.10.2026;zawieszony
+179;Ewa;Król;Wrocław;ul. Długa 55;3241,83;19.04.2026;nowy
+180;Mateusz;Mazur;Wrocław;ul. Długa 1;4606,46;06.01.2026;aktywny
+181;Zofia;Mazur;Wrocław;ul. Długa 59;4695,23;25.10.2026;aktywny
+182;Jędrzej;Wiśniewski;Poznań;ul. Długa 56;713,81;05.06.2026;zawieszony
+183;Anna;Zieliński;Gdańsk;ul. Długa 6;5298,40;17.11.2026;nowy
+184;Piotr;Kowalska;Poznań;ul. Długa 66;3299,65;25.12.2026;nowy
+185;Anna;Wiśniewski;Świdnica;ul. Długa 18;9393,36;13.11.2026;nowy
+186;Zofia;Mazur;Kraków;ul. Długa 25;7271,90;27.02.2026;aktywny
+187;Piotr;Król;Świdnica;"ul. Długa 29; lok. 2";7204,63;26.12.2026;zawieszony
+188;Tomasz;Zieliński;Kraków;ul. Długa 36;1674,79;11.10.2026;nowy
+189;Małgorzata;Dąbrowski;Kraków;ul. Długa 76;9655,93;16.04.2026;zawieszony
+190;Zofia;Szymańska;Zielona Góra;ul. Długa 52;396,22;07.03.2026;zawieszony
+191;Piotr;Kowalska;Zielona Góra;ul. Długa 34;9399,08;13.03.2026;zawieszony
+192;Mateusz;Wiśniewski;Kraków;ul. Długa 67;9163,56;15.09.2026;nowy
+193;Jędrzej;Szymańska;Wrocław;ul. Długa 95;6613,68;28.07.2026;zawieszony
+194;Piotr;Mazur;Łódź;ul. Długa 43;6064,06;05.06.2026;aktywny
+195;Żaneta;Szymańska;Kraków;ul. Długa 38;6462,66;24.01.2026;nowy
+196;Anna;Kowalska;Łódź;ul. Długa 41;9135,72;19.11.2026;aktywny
+197;Ewa;Król;Gdańsk;ul. Długa 56;3061,05;20.11.2026;aktywny
+198;Anna;Kowalska;Gdańsk;ul. Długa 84;5131,18;08.10.2026;aktywny
+199;Żaneta;Król;Świdnica;ul. Długa 14;5956,69;12.05.2026;aktywny
+200;Zofia;Dąbrowski;Kraków;ul. Długa 76;4343,11;19.05.2026;nowy

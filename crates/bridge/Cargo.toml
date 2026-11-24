@@ -1,0 +1,27 @@
+[package]
+name = "notes-bridge"
+version = "0.1.0"
+edition = "2024"
+license.workspace = true
+publish = false
+
+[features]
+default = []
+# shortcut: only the Tauri app enables the OS keyring; tests run on MemoryKeyStore
+os-keyring = ["notes-sync/os-keyring"]
+
+[dependencies]
+chrono = "0.4"
+chrono-tz = "0.10"
+notes-core = { path = "../core" }
+serde_json = "1"
+blake3 = "1.8.7"
+notify = "8"
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+notes-sync = { path = "../sync" }
+serde = { version = "1", features = ["derive"] }
+zeroize = "1.9.1"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+yrs = "0.28.0"

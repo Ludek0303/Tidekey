@@ -1,0 +1,50 @@
+[package]
+name = "notes-preview-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+notes-preview = { path = ".." }
+
+# its own workspace: the fuzz crate is not a member of the root workspace
+[workspace]
+
+[[bin]]
+name = "fuzz_ppt"
+path = "fuzz_targets/fuzz_ppt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_dwg"
+path = "fuzz_targets/fuzz_dwg.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_doc"
+path = "fuzz_targets/fuzz_doc.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_mkv"
+path = "fuzz_targets/fuzz_mkv.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_avi"
+path = "fuzz_targets/fuzz_avi.rs"
+test = false
+doc = false
+bench = false

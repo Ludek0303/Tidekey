@@ -1,0 +1,28 @@
+.git
+.gitignore
+target
+app/src-tauri/target
+ui/node_modules
+ui/dist
+ui/src/wasm
+docs/organization-checks
+backups
+*.log
+docker/notes-organizations-web.tar
+# speech models go to the voice-models volume, never into the image (docs/DOCKER-WEB.md)
+models
+pomiary
+
+# ruflo tooling in the repo root, not part of the image
+/node_modules
+.swarm
+.claude-flow
+ruvector.db
+agentdb.rvf*
+graphify-out
+
+# the MCP package is built and released on its own, not part of the image
+mcp/node_modules
+mcp/dist
+mcp/release
+scripts/licencje/.cache

@@ -1,0 +1,68 @@
+/* Projekt: one project's screen (projectpage.ts). Colours come from the theme tokens, so dark mode follows. */
+.project-summary { display: block; }
+.project-summary .org-card-body { display: grid; gap: 10px; }
+.project-section { display: grid; gap: 10px; margin-top: 18px; min-width: 0; }
+.project-section > h3 { margin: 0; font-size: 15px; }
+.project-section > h4 { margin: 6px 0 0; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+
+.project-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 0; }
+.project-stat { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; background: var(--panel); }
+.project-stat dt { color: var(--muted); font-size: 12px; }
+.project-stat dd { margin: 2px 0 0; font-size: 20px; font-weight: 600; }
+
+/* Kanban: four columns; the row scrolls sideways inside its container on narrow screens. */
+.project-kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+.project-col { display: grid; align-content: start; gap: 8px; min-width: 0; padding: 10px; border: 1px dashed var(--border); border-radius: var(--radius-sm); background: var(--bg); }
+.project-col h4 { margin: 0; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.project-col-list { display: grid; gap: 8px; align-content: start; min-height: 40px; }
+.project-col-list > .muted { margin: 0; font-size: 12px; }
+.project-task { display: grid; gap: 6px; min-width: 0; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--panel); cursor: grab; }
+.project-task-title { justify-self: stretch; padding: 0; border: 0; background: none; color: var(--text); font: inherit; font-weight: 600; text-align: left; overflow-wrap: anywhere; cursor: pointer; }
+.project-task .btn { justify-self: start; }
+.project-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Timeline: a label column and a track per task; the dashed line is today. */
+.project-gantt { display: grid; gap: 6px; min-width: 0; }
+.project-gantt-axis, .project-gantt-row { display: grid; grid-template-columns: minmax(96px, 220px) minmax(0, 1fr); gap: 10px; align-items: center; }
+.project-gantt-scale { position: relative; height: 32px; font-size: 11px; color: var(--muted); }
+.project-gantt-tick { position: absolute; top: 0; white-space: nowrap; }
+.project-gantt-tick.start { transform: none; }
+.project-gantt-tick.end { transform: translateX(-100%); }
+.project-gantt-tick.today { top: 16px; transform: translateX(-50%); color: var(--text); } /* its own line: never on top of a date */
+.project-gantt-rows { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.project-gantt-label { padding: 0; border: 0; background: none; color: var(--text); font: inherit; font-size: 12px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.project-gantt-track { position: relative; height: 16px; border-radius: 4px; background: var(--sel); }
+.project-gantt-bar { position: absolute; top: 2px; bottom: 2px; min-width: 4px; border-radius: 4px; }
+.project-bar-done { background: var(--success); }
+.project-bar-overdue { background: var(--danger-solid); }
+.project-bar-open { background: var(--accent-solid); }
+.project-gantt-today { position: absolute; top: -2px; bottom: -2px; border-left: 2px dashed var(--text); }
+
+/* Tablica notatki (kanban.ts): named columns 272 px wide, scrolled sideways inside the board; stacked on narrow screens. */
+.kanban-board { grid-auto-columns: 272px; }
+.kanban-board .project-col { background: var(--panel); }
+.kanban-board .project-col h4 { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--text); text-transform: none; letter-spacing: 0; }
+.kanban-count { color: var(--muted); font-weight: 400; }
+.kanban-done-mark { color: var(--success); }
+.kanban-empty { margin: 0; font-size: 12px; color: var(--muted); }
+.project-col.is-drop { outline: 2px solid var(--accent); outline-offset: -2px; }
+.project-task:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.kanban-add { display: grid; }
+.kanban-add-input { min-width: 0; width: 100%; box-sizing: border-box; }
+.task-chip-stage { color: var(--accent); }
+.kanban-columns-dialog .kanban-cols-list { display: grid; gap: 6px; margin: 8px 0; padding: 0; list-style: none; }
+.kanban-col-row { display: flex; gap: 6px; align-items: center; }
+.kanban-col-row input { flex: 1; min-width: 0; }
+.kanban-cols-btn { padding: 2px 8px; }
+@media (max-width: 639px) {
+  .kanban-board { grid-auto-flow: row; grid-auto-columns: auto; }
+}
+
+@media (max-width: 560px) {
+  .project-gantt-axis, .project-gantt-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .project-gantt-spacer { display: none; }
+}
+
+/* The board's header: the title on the left, "Kolumny…" a plain button on the right. */
+.kanban-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.kanban-head .kanban-columns-btn { width: auto; flex: 0 0 auto; }

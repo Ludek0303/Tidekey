@@ -1,0 +1,18 @@
+[
+  {
+    "package": "libheif-js",
+    "version": "1.23.5",
+    "license": "LGPL-3.0",
+    "source": "https://github.com/catdad-experiments/libheif-js/tree/v1.23.5",
+    "upstream": "https://github.com/strukturag/libheif",
+    "files": {
+      "libheif.js": "376c0bb483c23ac458cd22d718074693748ea75eddc3e4929353d4153e365a2e",
+      "libheif.wasm": "184d3d20f8323877f13e9f5254f9c6a0ce272c9a3a2f823b0b2bcd2ee9f73f80",
+      "LICENSE": "fa81ce652315b013359d6e8e4744335f31a50c7c192907176d3632f78a3b4596"
+    },
+    "copyright": [
+      "libheif: Dirk Farin i współautorzy (nagłówki źródeł libheif)",
+      "libheif-js: Kiril Vatev (pole author w package.json libheif-js 1.23.5)"
+    ]
+  }
+]

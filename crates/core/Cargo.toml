@@ -1,0 +1,32 @@
+[package]
+name = "notes-core"
+version = "0.1.0"
+edition = "2024"
+license.workspace = true
+publish = false
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+blake3 = "1.8.7"
+chacha20poly1305 = "0.11.0"
+ed25519-dalek = "3.0.0"
+getrandom = "0.4.3"
+hex = "0.4.3"
+pulldown-cmark = { version = "0.13.4", default-features = false, features = ["html"] }
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+thiserror = "2.0.21"
+yrs = "0.28.0"
+zstd = "0.14"
+similar = { version = "3", features = ["wasm32_web_time"] }
+diffy = "0.5"
+sha1 = "0.10"
+zeroize = "1.9.1"
+
+[target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
+# SystemTime panics on wasm32-unknown-unknown; the browser's clock is the only one there
+js-sys = "0.3"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+proptest = "1"

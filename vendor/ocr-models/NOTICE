@@ -1,0 +1,10 @@
+PaddleOCR PP-OCRv5 models (text detection and Latin-script recognition)
+Copyright (c) PaddlePaddle Authors. Licensed under the Apache License, Version 2.0 (LICENSE in this folder: the
+LICENSE file of PaddlePaddle/PaddleOCR at tag v3.0.0, unchanged).
+Source: https://github.com/PaddlePaddle/PaddleOCR — official inference models PP-OCRv5_mobile_det and
+latin_PP-OCRv5_mobile_rec (PaddleOCR 3.0, paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0).
+
+Modified by the Notes authors (2026-11-19): converted from PaddlePaddle to ONNX with paddle2onnx 2.0.2rc3 (opset 17),
+simplified with onnxsim 0.8.1, weights converted to float16 with onnxconverter-common 1.16.0 (inputs and outputs stay
+float32). ppocrv5_latin_dict.txt is the model's character list from its inference.yml, one character per line.
+Reproduce: bash scripts/models/convert.sh (sums in SHA256SUMS; --check verifies them).

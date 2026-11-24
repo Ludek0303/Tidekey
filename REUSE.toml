@@ -1,0 +1,95 @@
+# Licences of the files in this repository, by folder (https://reuse.software, `reuse lint`). docs/LICENCJE.md.
+# The last matching annotation wins. Third-party components outside this repository (crates, npm packages) are listed
+# in THIRD_PARTY_NOTICES.txt instead.
+version = 1
+
+# Everything is the project's own work under the AGPL unless a later annotation says otherwise.
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Stanisław Ludwicki"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# libheif-js 1.23.5: shipped byte for byte as a separate file (docs/PODGLAD.md §1, LGPL mode)
+[[annotations]]
+path = "vendor/lgpl/libheif-js-1.23.5/**"
+precedence = "override"
+SPDX-FileCopyrightText = ["Dirk Farin and the libheif contributors", "Kiril Vatev (libheif-js)"]
+SPDX-License-Identifier = "LGPL-3.0-only"
+
+# PaddleOCR PP-OCRv5 models, converted by us to ONNX (vendor/ocr-models/NOTICE names the changes)
+[[annotations]]
+path = "vendor/ocr-models/**"
+precedence = "override"
+SPDX-FileCopyrightText = ["PaddlePaddle Authors", "2026 Stanisław Ludwicki (conversion to ONNX)"]
+SPDX-License-Identifier = "Apache-2.0"
+
+# the Lucide "book-open" icon on a purple square
+[[annotations]]
+path = "ui/public/favicon.svg"
+precedence = "override"
+SPDX-FileCopyrightText = "Lucide Icons and Contributors"
+SPDX-License-Identifier = "ISC"
+
+# J. F. Kennedy's inaugural address (1961), a work of the US federal government; the excerpt whisper.cpp uses
+[[annotations]]
+path = "ui/src/voice/fixtures/jfk.wav"
+precedence = "override"
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "LicenseRef-PublicDomain"
+
+# REUSE skips files named LICENSE*/COPYING*, so the licence texts in scripts/licencje/texts/ need no annotation.
+
+# notices files of third parties, kept whole as their licences require
+[[annotations]]
+path = ["scripts/licencje/texts/onnxruntime-web-1.24.1/ThirdPartyNotices.txt", "scripts/licencje/texts/webview2-sdk-1.0.3800.47/NOTICE.txt"]
+precedence = "override"
+SPDX-FileCopyrightText = "Microsoft Corporation"
+SPDX-License-Identifier = "MIT"
+
+# Anthropic's security-review command for Claude Code, unchanged (anthropics/claude-code-security-review, MIT)
+[[annotations]]
+path = ".claude/commands/security-review.md"
+precedence = "override"
+SPDX-FileCopyrightText = "2025 Anthropic"
+SPDX-License-Identifier = "MIT"
+
+# test PDFs made with LibreOffice embed a subset of the system's Liberation Sans 2.1.5 (SIL OFL 1.1)
+[[annotations]]
+path = ["fixtures/ocr/obciety.pdf", "fixtures/ocr/pdf-haslo.pdf", "fixtures/ocr/pdf-mieszany.pdf", "fixtures/ocr/pdf-tekst.pdf", "fixtures/preview/dokument.pdf", "fixtures/preview/uszkodzony.pdf"]
+precedence = "override"
+SPDX-FileCopyrightText = ["2026 Stanisław Ludwicki", "Red Hat, Inc. (Liberation Sans, embedded subset)"]
+SPDX-License-Identifier = "AGPL-3.0-or-later AND OFL-1.1"
+
+# embeds Liberation Sans 1.07.4 from pdfjs-dist (GPL-2.0 with the Liberation font exception, which allows embedding
+# the font in documents); a test file only, never shipped
+[[annotations]]
+path = "fixtures/ocr/pdf-zly-font.pdf"
+precedence = "override"
+SPDX-FileCopyrightText = ["2026 Stanisław Ludwicki", "Red Hat, Inc. (Liberation Sans 1.07.4, embedded)"]
+SPDX-License-Identifier = "AGPL-3.0-or-later AND LicenseRef-Liberation-1"
+
+# official SPDX licence texts (reuse download)
+[[annotations]]
+path = "scripts/licencje/spdx/CC0-1.0.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "scripts/licencje/spdx/MPL-2.0.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "MPL-2.0"
+
+[[annotations]]
+path = "scripts/licencje/spdx/CC-BY-4.0.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = "scripts/licencje/spdx/Zlib.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "Zlib"

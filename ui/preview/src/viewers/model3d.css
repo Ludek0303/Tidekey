@@ -1,0 +1,32 @@
+/* 3D model (Online3DViewer, PODGLAD-PLAN §5). The engine puts its canvas and its progress text into the stage; the
+   toolbar is the frame's .r-narzedzia (frame.css). */
+.r-model {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.r-model-scena {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.r-model-scena canvas {
+  display: block;
+  touch-action: none;
+  cursor: grab;
+  outline: none;
+}
+
+/* the engine's progress text, shown while the model loads */
+.r-model-scena > div {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  color: var(--muted);
+}

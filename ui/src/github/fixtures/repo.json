@@ -1,0 +1,30 @@
+{
+  "id": 718294051,
+  "node_id": "R_kgDOKq3Rkw",
+  "name": "notatki",
+  "full_name": "przyklad/notatki",
+  "private": false,
+  "owner": {
+    "login": "przyklad",
+    "id": 58231904,
+    "type": "User",
+    "site_admin": false
+  },
+  "html_url": "https://github.com/przyklad/notatki",
+  "description": "Notatki w Markdown",
+  "fork": false,
+  "url": "https://api.github.com/repos/przyklad/notatki",
+  "created_at": "2026-03-02T10:14:55Z",
+  "updated_at": "2026-11-13T18:02:12Z",
+  "pushed_at": "2026-11-13T18:02:11Z",
+  "size": 128,
+  "default_branch": "main",
+  "visibility": "public",
+  "archived": false,
+  "disabled": false,
+  "has_issues": true,
+  "has_wiki": false,
+  "forks_count": 0,
+  "open_issues_count": 0,
+  "license": null
+}

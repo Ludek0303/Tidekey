@@ -1,0 +1,216 @@
+/* Preview window (ui/src/preview/window.ts). Looks as in docs/design/podglad/makiety.html; colours come from the theme tokens. */
+
+.podglad {
+  --podglad-tlo: var(--overlay);
+  --podglad-okno: var(--bg);
+  --podglad-pasek: var(--panel);
+  --podglad-krawedz: var(--border);
+  --podglad-tekst: var(--text);
+  --podglad-opis: var(--muted);
+  --podglad-akcent: var(--accent);
+  --podglad-karta: var(--editor-bg);
+  --podglad-postep: var(--accent);
+  --podglad-blad: var(--danger);
+  --podglad-promien: var(--radius-panel);
+  --podglad-czas: 120ms;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--podglad-tlo);
+}
+
+.podglad [hidden] { display: none; }
+
+.podglad-okno {
+  container-type: inline-size;
+  width: min(1200px, 100%);
+  height: min(860px, 100%);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  background: var(--podglad-okno);
+  color: var(--podglad-tekst);
+  border: 1px solid var(--podglad-krawedz);
+  border-radius: var(--podglad-promien);
+  overflow: hidden;
+  box-shadow: var(--shadow-float);
+}
+
+.podglad-pasek {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 8px 0 14px;
+  background: var(--podglad-pasek);
+  border-bottom: 1px solid var(--podglad-krawedz);
+}
+
+.podglad-ikona {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--podglad-opis);
+}
+
+.podglad-nazwa {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+/* The name is cut in the middle: the start ellipsises, the end never does. */
+.podglad-nazwa strong {
+  display: flex;
+  min-width: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.podglad-nazwa-poczatek {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.podglad-nazwa-koniec { flex: none; white-space: pre; }
+
+.podglad-opis { color: var(--podglad-opis); font-size: 12px; }
+
+.podglad-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--podglad-opis);
+  font-variant-numeric: tabular-nums;
+}
+
+.podglad-licznik { min-width: 52px; text-align: center; font-size: 12px; }
+
+.podglad-akcje { display: flex; align-items: center; gap: 4px; }
+
+.podglad-przycisk {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  background: transparent;
+  color: var(--podglad-tekst);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  cursor: pointer;
+}
+
+.podglad-przycisk:hover { background: var(--hover); }
+.podglad-przycisk:focus-visible,
+.podglad-ramka:focus-visible,
+.podglad .btn:focus-visible { outline: 2px solid var(--podglad-akcent); outline-offset: 1px; }
+.podglad-przycisk.tylko-ikona { width: 32px; padding: 0; justify-content: center; }
+.podglad-przycisk svg { width: 16px; height: 16px; }
+.podglad-przycisk[disabled] { opacity: 0.4; cursor: default; }
+.podglad-separator { width: 1px; height: 20px; background: var(--podglad-krawedz); margin: 0 4px; }
+.podglad-wiecej { display: none; }
+
+.podglad-tresc { position: relative; min-height: 0; overflow: hidden; }
+
+/* The frame is hidden (but keeps its size) while a state shows. */
+.podglad-ramka { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: var(--podglad-okno); }
+.podglad-stan:not([hidden]) ~ .podglad-ramka { visibility: hidden; }
+
+/* States: drawn by the app. */
+.podglad-stan {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.podglad-karta {
+  width: min(420px, 100%);
+  padding: 28px 24px 22px;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  background: var(--podglad-karta);
+  border: 1px solid var(--podglad-krawedz);
+  border-radius: var(--podglad-promien);
+}
+
+.podglad-karta .duza-ikona { width: 44px; height: 44px; color: var(--podglad-opis); }
+.podglad-karta h2 { margin: 4px 0 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.podglad-karta p { margin: 0; color: var(--podglad-opis); }
+.podglad-karta .akcje { display: flex; gap: 8px; margin-top: 8px; }
+.podglad-karta.is-blad h2 { color: var(--podglad-tekst); }
+.podglad-karta.is-blad .duza-ikona { color: var(--podglad-blad); }
+
+.podglad-ladowanie {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: var(--podglad-opis);
+  font-variant-numeric: tabular-nums;
+}
+
+.podglad-postep { width: 260px; height: 4px; border-radius: 2px; background: var(--podglad-krawedz); overflow: hidden; }
+.podglad-postep > span { display: block; height: 100%; background: var(--podglad-postep); }
+
+.podglad .btn {
+  min-height: 34px;
+  padding: 6px 14px;
+  border-radius: var(--radius-control);
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font: inherit;
+  cursor: pointer;
+}
+
+.podglad .btn-primary {
+  background: var(--accent-solid);
+  color: var(--on-accent);
+  border-color: var(--accent-solid);
+}
+
+/* Narrow window: the whole screen, icons only; the arrows become a swipe and the menu. */
+@media (max-width: 699px) {
+  .podglad { padding: 0; }
+  .podglad-okno { width: 100%; height: 100%; border: 0; border-radius: 0; }
+  .podglad-nav,
+  .podglad-akcje .pelne,
+  .podglad-separator,
+  .podglad-opis { display: none; }
+  .podglad-wiecej { display: inline-flex; }
+}
+
+@container (max-width: 760px) {
+  .podglad-etykieta { display: none; }
+  .podglad-przycisk.pelne { width: 32px; padding: 0; justify-content: center; }
+  .podglad-nav { gap: 0; }
+  .podglad-licznik { min-width: 44px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .podglad { animation: podglad-wejscie var(--podglad-czas) var(--ease) both; }
+  @keyframes podglad-wejscie { from { opacity: 0; } }
+}
+.podglad-straznik { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* The "Tekst" tab (ui/src/preview/window.ts): the text layer over the frame, read-only, page by page. */
+.podglad-tekst { position: absolute; inset: 0; z-index: 2; overflow: auto; padding: 16px 20px; background: var(--podglad-okno); color: var(--podglad-tekst); }
+.podglad-tekst-pasek { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.podglad-tekst-stan { color: var(--podglad-opis); font-size: 13px; }
+.podglad-tekst-stan.is-blad { color: var(--podglad-blad); }
+.podglad-tekst-strona h3 { margin: 14px 0 6px; font-size: 13px; font-weight: 600; }
+.podglad-tekst pre { margin: 0 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.podglad-jakosc { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--podglad-pasek); border: 1px solid var(--podglad-krawedz); font-size: 12px; color: var(--podglad-opis); }
+.podglad-jakosc.is-niska { color: var(--podglad-blad); }

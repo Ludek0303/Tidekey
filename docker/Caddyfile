@@ -1,0 +1,6 @@
+{$SITE_ADDRESS} {
+	# speech models are already-compressed ONNX and must be served byte-exact for Range resumes: no encoding
+	@notmodels not path /models/*
+	encode @notmodels zstd gzip
+	reverse_proxy notes:8080
+}

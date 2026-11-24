@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Panel administratora · notes-node</title>
+<style>
+/* Tokens follow ui/src/tokens.css so the panel looks like the app: dark by default, light on request. */
+:root {
+  color-scheme: dark;
+  --bg: #161719;
+  --panel: #1e1f22;
+  --panel-2: #232427;
+  --border: #35363c;
+  --hover: #2d2e34;
+  --active: #36343f;
+  --text: #ececf0;
+  --muted: #a6a6b2;
+  --accent: #b4a0ff;
+  --accent-solid: #7052c7;
+  --on-accent: #ffffff;
+  --danger: #ff9c9c;
+  --danger-solid: #ab343e;
+  --success: #9bc8ae;
+  --warning: #f08c00;
+  --warn-bg: rgba(240, 140, 0, 0.12);
+  --ok-bg: rgba(155, 200, 174, 0.12);
+  --danger-bg: rgba(255, 156, 156, 0.12);
+  --overlay: #08091099;
+  --shadow-float: 0 16px 48px #00000040, 0 2px 8px #00000020;
+  --radius-control: 11px;
+  --radius-panel: 18px;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #f0efed; --panel: #f7f6f4; --panel-2: #ffffff; --border: #dedde2; --hover: #eeecf1; --active: #e8e3f1;
+    --text: #2c2b33; --muted: #6c6978; --accent: #7052b8; --accent-solid: #7052c7;
+    --danger: #ac303d; --danger-solid: #ab343e; --success: #38734e; --warning: #9a5b00;
+    --warn-bg: rgba(154, 91, 0, 0.10); --ok-bg: rgba(56, 115, 78, 0.10); --danger-bg: rgba(172, 48, 61, 0.09);
+    --overlay: #25223055; --shadow-float: 0 16px 48px #2821361a, 0 2px 8px #0000000a;
+  }
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f0efed; --panel: #f7f6f4; --panel-2: #ffffff; --border: #dedde2; --hover: #eeecf1; --active: #e8e3f1;
+  --text: #2c2b33; --muted: #6c6978; --accent: #7052b8; --accent-solid: #7052c7;
+  --danger: #ac303d; --danger-solid: #ab343e; --success: #38734e; --warning: #9a5b00;
+  --warn-bg: rgba(154, 91, 0, 0.10); --ok-bg: rgba(56, 115, 78, 0.10); --danger-bg: rgba(172, 48, 61, 0.09);
+  --overlay: #25223055; --shadow-float: 0 16px 48px #2821361a, 0 2px 8px #0000000a;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; min-height: 100vh; min-height: 100dvh; background: var(--bg); color: var(--text);
+  font: 14px/1.45 var(--font-ui); -webkit-text-size-adjust: 100%;
+}
+h1, h2, h3, h4, p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  padding-block: 12px; padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+  background: var(--panel); border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-title { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
+.brand-sub { font-size: 12px; color: var(--muted); }
+.mark {
+  display: grid; place-items: center; flex: 0 0 auto; width: 32px; height: 32px; border-radius: 10px;
+  background: var(--accent-solid); color: var(--on-accent); font-weight: 700;
+}
+.nav { display: flex; gap: 4px; flex: 1 1 auto; min-width: 0; overflow-x: auto; }
+.nav button {
+  flex: 0 0 auto; min-height: 34px; padding: 0 12px; border: 0; border-radius: var(--radius-control);
+  background: transparent; color: var(--muted); font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.nav button:hover { background: var(--hover); color: var(--text); }
+.nav button[aria-current="page"] { background: var(--active); color: var(--text); }
+
+/* Layout */
+.wrap {
+  max-width: 1120px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+}
+.wrap > section + section { margin-top: 28px; }
+h2 { font-size: 20px; letter-spacing: -0.02em; margin: 0 0 14px; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.toolbar h2 { margin: 0; }
+.search { display: grid; width: min(320px, 100%); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.card {
+  min-width: 0; padding: 18px; border: 1px solid var(--border); border-radius: var(--radius-panel);
+  background: var(--panel);
+}
+.card-title { margin: 0 0 8px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.big {
+  font-size: 26px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2;
+  font-variant-numeric: tabular-nums; overflow-wrap: anywhere;
+}
+.card .muted { margin-top: 4px; font-size: 12px; }
+.card .bar { margin-top: 12px; }
+.kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; margin: 12px 0 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-panel); background: var(--panel);
+}
+table { width: 100%; min-width: 640px; border-collapse: collapse; }
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+th { font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.detail > td { background: var(--panel-2); }
+tr.attn > td { background: var(--warn-bg); }
+.stack { display: grid; gap: 6px; min-width: 130px; }
+.stack .bar { min-width: 0; }
+
+/* Detail panels under a table row */
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px 24px; }
+.detail-grid > div { min-width: 0; }
+.sub { margin: 0 0 8px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.list-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
+.grow { flex: 1 1 140px; min-width: 0; overflow-wrap: anywhere; }
+.quota-form, .assign-form { display: grid; gap: 10px; }
+.row-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* Chips, badges, bars */
+.badge {
+  display: inline-flex; align-items: center; padding: 1px 8px; border: 1px solid var(--border);
+  border-radius: 99px; color: var(--muted); font-size: 12px; white-space: nowrap;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border: 1px solid transparent;
+  border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap;
+}
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip-ok { color: var(--success); background: var(--ok-bg); }
+.chip-req { color: var(--warning); background: var(--warn-bg); border-color: color-mix(in srgb, var(--warning) 45%, transparent); }
+.chip-off { color: var(--muted); background: var(--hover); }
+.bar { height: 8px; min-width: 80px; border-radius: 99px; background: var(--hover); overflow: hidden; }
+.bar > span { display: block; height: 100%; border-radius: inherit; background: var(--accent-solid); transition: width 300ms ease; }
+.bar-warn > span { background: var(--warning); }
+.bar-danger > span { background: var(--danger-solid); }
+
+/* Buttons and fields */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; padding: 0 14px;
+  border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--panel-2);
+  color: var(--text); font-weight: 600; cursor: pointer; transition: background 150ms ease, filter 150ms ease;
+}
+.btn:hover:not(:disabled) { background: var(--hover); }
+.btn-primary { background: var(--accent-solid); border-color: var(--accent-solid); color: var(--on-accent); }
+.btn-primary:hover:not(:disabled) { background: var(--accent-solid); filter: brightness(1.08); }
+.btn-danger { background: var(--danger-solid); border-color: var(--danger-solid); color: #fff; }
+.btn-danger:hover:not(:disabled) { background: var(--danger-solid); filter: brightness(1.08); }
+.btn-danger-text { background: transparent; color: var(--danger); }
+.btn-ghost { background: transparent; color: var(--muted); }
+.btn-ghost:hover:not(:disabled) { color: var(--text); }
+.btn-small { min-height: 28px; padding: 0 10px; font-size: 12px; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+input, select {
+  min-width: 0; max-width: 100%; min-height: 36px; padding: 0 10px; border: 1px solid var(--border);
+  border-radius: 10px; background: var(--bg); color: var(--text);
+}
+.field { display: grid; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.field input, .field select { width: 100%; font-weight: 400; color: var(--text); }
+.form-error {
+  padding: 9px 12px; border-radius: 10px; background: var(--danger-bg); color: var(--danger); font-size: 13px;
+}
+
+/* Login */
+.login {
+  min-height: 100vh; min-height: 100dvh; display: grid; place-items: center;
+  padding: 24px var(--gutter-r) 24px var(--gutter-l);
+}
+.login-card {
+  width: min(100%, 380px); padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-panel);
+  background: var(--panel); box-shadow: var(--shadow-float);
+}
+.login-card h1 { font-size: 22px; letter-spacing: -0.02em; margin: 4px 0 6px; }
+.login-card form { display: grid; gap: 14px; margin-top: 20px; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* Dialogs */
+dialog {
+  width: min(520px, calc(100vw - 32px)); max-height: 86vh; max-height: 86dvh; overflow: auto; padding: 0;
+  border: 1px solid var(--border); border-radius: var(--radius-panel); background: var(--panel); color: var(--text);
+  box-shadow: var(--shadow-float);
+}
+dialog::backdrop { background: var(--overlay); }
+.dlg-inner { display: grid; gap: 14px; padding: 20px; }
+.dlg-title { font-size: 17px; letter-spacing: -0.01em; text-wrap: balance; }
+.dlg-body { display: grid; gap: 10px; }
+.dlg-body p { overflow-wrap: anywhere; }
+.dlg-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.preview { display: grid; gap: 8px; }
+.preview .sub { margin-top: 4px; }
+
+/* Registration code shown once */
+.code-fresh { display: grid; gap: 8px; margin-top: 18px; border-color: var(--accent-solid); }
+.code-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.code-text { font: 600 22px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.08em; user-select: all; overflow-wrap: anywhere; }
+
+/* Notice */
+.notice {
+  position: fixed; z-index: 20; left: var(--gutter-l); right: var(--gutter-r);
+  bottom: max(16px, env(safe-area-inset-bottom, 0px)); max-width: 520px; margin-inline: auto;
+  padding: 11px 14px; border: 1px solid var(--border); border-radius: var(--radius-control);
+  background: var(--panel-2); box-shadow: var(--shadow-float); font-size: 13px; overflow-wrap: anywhere;
+}
+.notice.is-error { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, var(--border)); }
+
+/* Phones: header row = brand + Wyloguj, tabs in their own scrolling strip; tables become stacked cards. */
+@media (max-width: 700px) {
+  .top { gap: 10px; }
+  .brand { flex: 1 1 auto; min-width: 0; }
+  #logout { order: 1; }
+  .nav { order: 2; flex: 0 0 100%; }
+  .table-wrap { overflow: visible; border: 0; background: none; }
+  table, tbody { display: block; min-width: 0; }
+  thead { display: none; }
+  tbody tr { display: block; margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius-panel); background: var(--panel); overflow: hidden; }
+  tbody tr.detail { margin: -12px 0 12px; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 var(--radius-panel) var(--radius-panel); }
+  td { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 14px; border-bottom: 1px solid var(--border); text-align: right; min-width: 0; }
+  td:first-child { display: block; padding-top: 14px; text-align: left; font-size: 15px; overflow-wrap: anywhere; }
+  td[data-label]::before { content: attr(data-label); flex: 0 0 auto; color: var(--muted); font-size: 12px; font-weight: 600; text-align: left; }
+  td:last-child { display: flex; flex-wrap: wrap; justify-content: flex-start; border-bottom: 0; }
+  tr.detail > td { display: block; padding: 14px; background: var(--panel-2); border-bottom: 0; }
+  .stack { min-width: 0; justify-items: end; }
+  .stack .bar { width: 140px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .kv dd { white-space: nowrap; }
+}
+@media (max-width: 560px) {
+  h2 { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="login-view" hidden>
+  <main class="login">
+    <form id="login-form" class="login-card" novalidate>
+      <p class="eyebrow">notes-node</p>
+      <h1>Panel administratora</h1>
+      <p class="muted">Logowanie dla administratora serwera. Panel działa tylko w sieci lokalnej.</p>
+      <label class="field">
+        <span>Hasło</span>
+        <input id="pw" type="password" autocomplete="current-password" required>
+      </label>
+      <p id="login-note" class="form-error" role="alert" hidden></p>
+      <button id="login-btn" class="btn btn-primary" type="submit">Zaloguj</button>
+    </form>
+  </main>
+</div>
+
+<div id="app-view" hidden>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">N</span>
+      <div>
+        <h1 class="brand-title">Panel administratora</h1>
+        <p class="brand-sub">notes-node</p>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Sekcje panelu">
+      <button type="button" data-view="overview">Przegląd</button>
+      <button type="button" data-view="vaults">Organizacje i sejfy</button>
+      <button type="button" data-view="users">Konta</button>
+      <button type="button" data-view="storage">Magazyn plików</button>
+      <button type="button" data-view="signup">Kody rejestracyjne</button>
+    </nav>
+    <button id="logout" class="btn btn-ghost" type="button">Wyloguj</button>
+  </header>
+
+  <main class="wrap">
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+    <section data-section="overview" hidden>
+      <h2>Przegląd</h2>
+      <div id="overview-body"></div>
+    </section>
+
+    <section data-section="vaults" hidden>
+      <h2>Organizacje i sejfy</h2>
+      <div id="vaults-body"></div>
+    </section>
+
+    <section data-section="users" hidden>
+      <div class="toolbar">
+        <h2>Konta</h2>
+        <label class="search">
+          <span class="sr-only">Szukaj po adresie e-mail</span>
+          <input id="user-filter" type="search" placeholder="Szukaj po adresie e-mail" autocomplete="off">
+        </label>
+      </div>
+      <div id="users-body"></div>
+    </section>
+
+    <section data-section="storage" hidden>
+      <h2>Magazyn plików</h2>
+      <div id="storage-body"></div>
+    </section>
+
+    <section data-section="signup" hidden>
+      <h2>Kody rejestracyjne</h2>
+      <div id="signup-body"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+'use strict';
+
+const API = '/admin/api';
+const MB = 1024 * 1024;
+const ROLE = { owner: 'właściciel', admin: 'administrator', editor: 'edytor', viewer: 'czytelnik' };
+const ROLE_OPTIONS = [['editor', 'Edytor'], ['viewer', 'Czytelnik'], ['admin', 'Administrator']];
+const KIND = { organizacja: 'Organizacja', notatki: 'Notatki' };
+const BACKEND = { local: 'Lokalny dysk', seaweedfs: 'SeaweedFS' };
+const PERSONAL = { allowed: ['Dozwolone', 'chip-ok'], requested: ['Czeka na zgodę', 'chip-req'], off: ['Wyłączone', 'chip-off'] };
+const POLL_MS = 2000;
+
+const state = {
+  view: 'overview',
+  vaults: [],
+  users: [],
+  storage: null,
+  signup: [],
+  freshCode: null,
+  expanded: new Set(),
+  pollTimer: 0,
+};
+
+const $ = (id) => document.getElementById(id);
+
+// Builds DOM nodes; every value goes in as text, never as HTML.
+function el(tag, attrs, ...kids) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs || {})) {
+    if (value === null || value === undefined || value === false) continue;
+    if (key === 'class') node.className = value;
+    else if (key.startsWith('on')) node.addEventListener(key.slice(2), value);
+    else node.setAttribute(key, value === true ? '' : String(value));
+  }
+  for (const kid of kids.flat()) {
+    if (kid === null || kid === undefined || kid === false) continue;
+    node.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  }
+  return node;
+}
+
+function clear(node) { node.replaceChildren(); }
+function badge(text) { return el('span', { class: 'badge' }, text); }
+function big(text) { return el('p', { class: 'big' }, text); }
+function cardWith(title, ...children) { return el('section', { class: 'card' }, el('h3', { class: 'card-title' }, title), ...children); }
+function kvList(pairs) {
+  return el('dl', { class: 'kv' }, ...pairs.flatMap(([k, v]) => [el('dt', {}, k), el('dd', {}, v)]));
+}
+function rowsList(items, render, emptyText) {
+  const ul = el('ul', { class: 'list' });
+  if (!items.length) ul.append(el('li', { class: 'muted small' }, emptyText));
+  else for (const item of items) ul.append(render(item));
+  return ul;
+}
+function bar(value, tone, label) {
+  const track = el('div', { class: 'bar' + (tone ? ' bar-' + tone : ''), role: 'img', 'aria-label': label });
+  const fill = el('span');
+  fill.style.width = Math.min(100, Math.max(0, value)).toFixed(1) + '%';
+  track.append(fill);
+  return track;
+}
+// Copies column headers onto each cell (data-label) so the phone layout can show "label: value".
+function labelCells(table) {
+  const heads = [...table.querySelectorAll('thead th')].map((th) => th.textContent);
+  for (const tr of table.querySelectorAll('tbody tr')) {
+    [...tr.children].forEach((td, i) => {
+      if (i > 0 && i < heads.length - 1 && heads[i]) td.dataset.label = heads[i];
+    });
+  }
+}
+function toneFor(value) { return value >= 100 ? 'danger' : value >= 80 ? 'warn' : ''; }
+
+function fmtBytes(n) {
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let v = n;
+  let i = 0;
+  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
+  const text = new Intl.NumberFormat('pl-PL', { maximumFractionDigits: i === 0 ? 0 : 1 }).format(v);
+  return text + ' ' + units[i];
+}
+function fmtMb(bytes) {
+  return new Intl.NumberFormat('pl-PL').format(Math.round(bytes / MB)) + ' MB';
+}
+function fmtDate(s, withTime) {
+  const d = new Date(s);
+  if (Number.isNaN(d.getTime())) return '—';
+  return withTime
+    ? d.toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })
+    : d.toLocaleDateString('pl-PL', { year: 'numeric', month: '2-digit', day: '2-digit' });
+}
+function pct(part, whole) { return whole > 0 ? (part / whole) * 100 : 0; }
+function enc(s) { return encodeURIComponent(s); }
+
+// API: same-origin JSON, X-Notes-Admin on every non-GET request, server {error} text shown to the user.
+class ApiError extends Error {
+  constructor(status, serverText) {
+    super(serverText || fallbackMessage(status));
+    this.name = 'ApiError';
+    this.status = status;
+    this.serverText = serverText || null;
+  }
+}
+function fallbackMessage(status) {
+  if (status === 0) return 'Brak połączenia z serwerem.';
+  if (status === 401) return 'Sesja wygasła. Zaloguj się ponownie.';
+  if (status === 403) return 'Brak dostępu. Panel działa tylko w sieci lokalnej.';
+  if (status === 404) return 'Nie znaleziono.';
+  if (status === 409) return 'Operacja jest niemożliwa w obecnym stanie.';
+  if (status === 429) return 'Zbyt wiele prób. Spróbuj później.';
+  return 'Błąd serwera (kod ' + status + ').';
+}
+async function api(method, path, body) {
+  const headers = {};
+  if (method !== 'GET') headers['X-Notes-Admin'] = '1';
+  const init = { method, headers, credentials: 'same-origin' };
+  if (body !== undefined) {
+    headers['Content-Type'] = 'application/json';
+    init.body = JSON.stringify(body);
+  }
+  let res;
+  try { res = await fetch(API + path, init); } catch { throw new ApiError(0, null); }
+  let data = null;
+  try { data = await res.json(); } catch { data = null; }
+  if (!res.ok) throw new ApiError(res.status, data && typeof data.error === 'string' ? data.error : null);
+  return data;
+}
+
+let noticeTimer = 0;
+function notice(message, isError) {
+  const box = $('notice');
+  box.textContent = message;
+  box.classList.toggle('is-error', !!isError);
+  box.hidden = false;
+  clearTimeout(noticeTimer);
+  noticeTimer = setTimeout(() => { box.hidden = true; }, isError ? 9000 : 5000);
+}
+function onError(e) {
+  if (e.status === 401) { showLogin('Sesja wygasła. Zaloguj się ponownie.'); return; }
+  notice(e.message, true);
+}
+async function run(action, okMessage, reload) {
+  try {
+    await action();
+    notice(okMessage, false);
+    await reload();
+  } catch (e) {
+    onError(e);
+  }
+}
+
+// Dialogs: a fresh <dialog> per use, removed on close. build(ctx) fills it; ctx.button wires actions.
+function openDialog(title, build) {
+  const err = el('p', { class: 'form-error', role: 'alert', hidden: true });
+  const body = el('div', { class: 'dlg-body' });
+  const actions = el('div', { class: 'dlg-actions' });
+  const dlg = el('dialog', { 'aria-labelledby': 'dlg-title' },
+    el('div', { class: 'dlg-inner' }, el('h2', { id: 'dlg-title', class: 'dlg-title' }, title), body, err, actions));
+  const ctx = {
+    body,
+    close: () => dlg.close(),
+    setError(msg) { err.textContent = msg || ''; err.hidden = !msg; },
+    button(label, cls, fn, opts) {
+      const b = el('button', { type: 'button', class: 'btn ' + cls, autofocus: !!(opts && opts.autofocus) }, label);
+      b.addEventListener('click', async () => {
+        ctx.setError('');
+        const all = [...actions.querySelectorAll('button')];
+        const prev = all.map((x) => x.disabled);
+        all.forEach((x) => { x.disabled = true; });
+        try { await fn(); } catch (e) { ctx.setError(e.message); } finally {
+          if (dlg.open) all.forEach((x, i) => { x.disabled = prev[i]; });
+        }
+      });
+      actions.append(b);
+      return b;
+    },
+  };
+  dlg.addEventListener('close', () => dlg.remove());
+  document.body.append(dlg);
+  build(ctx);
+  dlg.showModal();
+}
+function confirmDialog(title, text, label, cls, action) {
+  openDialog(title, (ctx) => {
+    ctx.body.append(el('p', {}, text));
+    ctx.button('Anuluj', 'btn-ghost', () => ctx.close(), { autofocus: true });
+    ctx.button(label, cls, async () => { await action(); ctx.close(); });
+  });
+}
+
+// Login and session
+function showLogin(message) {
+  stopPoll();
+  state.expanded.clear();
+  $('app-view').hidden = true;
+  $('login-view').hidden = false;
+  const note = $('login-note');
+  note.textContent = message || '';
+  note.hidden = !message;
+  $('pw').focus();
+}
+function showApp(view) {
+  $('login-view').hidden = true;
+  $('app-view').hidden = false;
+  showView(view);
+}
+
+const LOADERS = { overview: loadOverview, vaults: loadVaults, users: loadUsers, storage: loadStorage, signup: loadSignup };
+
+async function showView(view) {
+  stopPoll();
+  state.view = view;
+  if (view !== 'signup') state.freshCode = null; // a new code is shown only until the admin leaves the section
+  for (const b of document.querySelectorAll('.nav button')) {
+    if (b.dataset.view === view) b.setAttribute('aria-current', 'page');
+    else b.removeAttribute('aria-current');
+  }
+  for (const s of document.querySelectorAll('[data-section]')) s.hidden = s.dataset.section !== view;
+  document.querySelector('.nav button[aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  try { await LOADERS[view](); } catch (e) { onError(e); }
+}
+
+// Overview
+async function loadOverview() {
+  renderOverview(await api('GET', '/overview'));
+}
+function renderOverview(o) {
+  const body = $('overview-body');
+  clear(body);
+  const d = o.disk;
+  const hasDisk = typeof d.totalBytes === 'number' && typeof d.freeBytes === 'number' && d.totalBytes > 0;
+  const diskCard = cardWith('Dysk serwera');
+  if (hasDisk) {
+    const used = Math.max(0, d.totalBytes - d.freeBytes);
+    const usedPct = pct(used, d.totalBytes);
+    diskCard.append(
+      big(fmtBytes(used)),
+      el('p', { class: 'muted' }, 'zajęte z ' + fmtBytes(d.totalBytes) + ', wolne ' + fmtBytes(d.freeBytes)),
+      bar(usedPct, toneFor(usedPct), 'Zajęte ' + Math.round(usedPct) + ' procent dysku'),
+    );
+  } else {
+    diskCard.append(big(fmtBytes(d.dataBytes)), el('p', { class: 'muted' }, 'Pojemność dysku jest niedostępna.'));
+  }
+  diskCard.append(kvList([['Katalog danych', fmtBytes(d.dataBytes)]]));
+
+  const v = o.vaults;
+  const grid = el('div', { class: 'grid' },
+    diskCard,
+    cardWith('Zaszyfrowane notatki', big(fmtBytes(o.notesBytes)), el('p', { class: 'muted' }, 'Migawki sejfów na serwerze')),
+    cardWith('Załączniki', big(fmtBytes(o.filesBytes)), el('p', { class: 'muted' }, 'Suma rozmiarów plików')),
+    cardWith('Konta', big(o.users), el('p', { class: 'muted' }, 'Zarejestrowane konta')),
+    cardWith('Sejfy według rodzaju', kvList([['Organizacje', v.organization], ['Notatki', v.notes], ['Osobiste', v.personal]])),
+    cardWith('Magazyn plików',
+      big(BACKEND[o.storage.current]),
+      el('p', { class: 'muted' }, 'Obiekty: ' + o.storage.objects)),
+  );
+  body.append(grid);
+}
+
+// Organizations and vaults
+async function loadVaults() {
+  state.vaults = await api('GET', '/vaults');
+  renderVaults();
+}
+function toggle(key) {
+  if (state.expanded.has(key)) state.expanded.delete(key);
+  else state.expanded.add(key);
+  if (key.startsWith('v:')) renderVaults();
+  else renderUsers();
+}
+function renderVaults() {
+  const body = $('vaults-body');
+  clear(body);
+  if (!state.vaults.length) {
+    body.append(el('p', { class: 'muted' }, 'Nie ma jeszcze organizacji ani sejfów.'));
+    return;
+  }
+  const head = ['Nazwa', 'Rodzaj', 'Właściciel', 'Członkowie', 'Migawka', 'Pliki', 'Limit', ''];
+  const tbody = el('tbody');
+  for (const v of state.vaults) {
+    const key = 'v:' + v.id;
+    const open = state.expanded.has(key);
+    const files = v.filesBytes;
+    const quota = v.quotaBytes;
+    const filesPct = pct(files, quota);
+    const filesCell = el('td', {},
+      el('div', { class: 'stack' },
+        el('span', {}, fmtBytes(files) + ' z ' + fmtBytes(quota)),
+        bar(filesPct, toneFor(filesPct), 'Pliki: ' + Math.round(filesPct) + ' procent limitu')));
+    tbody.append(el('tr', {},
+      el('td', {}, el('strong', {}, v.name)),
+      el('td', {}, badge(KIND[v.kind])),
+      el('td', {}, v.owner.email),
+      el('td', { class: 'num' }, String(v.members.length)),
+      el('td', { class: 'num' }, fmtBytes(v.snapshotBytes)),
+      filesCell,
+      el('td', {}, v.quotaDefault ? badge('domyślny') : fmtMb(v.quotaBytes)),
+      el('td', {}, el('button', {
+        type: 'button', class: 'btn btn-small', 'aria-expanded': String(open),
+        onclick: () => toggle(key),
+      }, open ? 'Zwiń' : 'Szczegóły')),
+    ));
+    if (open) tbody.append(el('tr', { class: 'detail' }, el('td', { colspan: String(head.length) }, vaultDetail(v))));
+  }
+  const table = el('table', {},
+    el('caption', { class: 'sr-only' }, 'Organizacje i sejfy'),
+    el('thead', {}, el('tr', {}, ...head.map((h) => el('th', { scope: 'col' }, h)))),
+    tbody);
+  labelCells(table);
+  body.append(el('div', { class: 'table-wrap' }, table));
+}
+function vaultDetail(v) {
+  const members = v.members;
+  const list = rowsList(members, (m) => el('li', { class: 'list-row' },
+    el('span', { class: 'grow' }, m.email),
+    badge(ROLE[m.role]),
+    m.role === 'owner' ? null : el('button', {
+      type: 'button', class: 'btn btn-small btn-danger-text',
+      onclick: () => confirmRemoveMember(v, m),
+    }, 'Usuń z organizacji')), 'Brak członków.');
+  const membersCol = el('div', {}, el('h4', { class: 'sub' }, 'Członkowie'), list);
+
+  const err = el('p', { class: 'form-error', role: 'alert', hidden: true });
+  const hasOwnQuota = !v.quotaDefault;
+  const input = el('input', {
+    type: 'number', min: '0', step: '1', inputmode: 'numeric', placeholder: 'domyślny',
+    value: hasOwnQuota ? String(Math.round(v.quotaBytes / MB)) : '',
+  });
+  const submit = async (quotaMb) => {
+    err.hidden = true;
+    try {
+      await api('PATCH', '/vaults/' + enc(v.id), { quotaMb });
+      notice(quotaMb === null ? 'Przywrócono domyślny limit.' : 'Limit plików zapisany.', false);
+      await loadVaults();
+    } catch (e) {
+      err.textContent = e.message;
+      err.hidden = false;
+    }
+  };
+  const quotaForm = el('form', {
+    class: 'quota-form',
+    onsubmit: (ev) => {
+      ev.preventDefault();
+      const raw = input.value.trim();
+      const n = Number(raw);
+      if (raw === '' || !Number.isInteger(n) || n < 0) {
+        err.textContent = 'Podaj liczbę całkowitą MB (0 lub więcej) albo przywróć domyślny limit.';
+        err.hidden = false;
+        input.focus();
+        return;
+      }
+      submit(n);
+    },
+  },
+    el('h4', { class: 'sub' }, 'Limit plików'),
+    el('label', { class: 'field' }, el('span', {}, 'Limit (MB)'), input),
+    el('p', { class: 'muted small' }, v.quotaDefault ? 'Używany jest limit domyślny serwera.' : 'Limit ustawiony dla tego sejfu.'),
+    el('div', { class: 'row-actions' },
+      el('button', { type: 'submit', class: 'btn btn-primary' }, 'Zapisz limit'),
+      el('button', {
+        type: 'button', class: 'btn', disabled: !!v.quotaDefault,
+        onclick: () => submit(null),
+      }, 'Przywróć domyślny')),
+    err);
+  return el('div', { class: 'detail-grid' }, membersCol, quotaForm);
+}
+function confirmRemoveMember(v, m) {
+  confirmDialog(
+    'Usunąć z organizacji?',
+    m.email + ' straci dostęp do organizacji „' + v.name + '”. Sejf zostanie oznaczony do wymiany klucza, tak jak przy zwykłym usunięciu członka.',
+    'Usuń z organizacji', 'btn-danger',
+    () => api('DELETE', '/vaults/' + enc(v.id) + '/members/' + enc(m.id))
+      .then(() => { notice('Osoba usunięta z organizacji.', false); return loadVaults(); }));
+}
+
+// Accounts
+async function loadUsers() {
+  const [users, vaults] = await Promise.all([api('GET', '/users'), api('GET', '/vaults')]);
+  state.users = users;
+  state.vaults = vaults;
+  renderUsers();
+}
+function personalChip(value) {
+  const [text, cls] = PERSONAL[value];
+  return el('span', { class: 'chip ' + cls }, text);
+}
+function renderUsers() {
+  const body = $('users-body');
+  clear(body);
+  const q = $('user-filter').value.trim().toLowerCase();
+  const list = state.users.filter((u) => u.email.toLowerCase().includes(q));
+  body.append(el('p', { class: 'muted small' },
+    'Kont: ' + state.users.length + (q ? ', pasujących: ' + list.length : '') + '. Prośby o własne notatki są wyróżnione.'));
+  if (!list.length) {
+    body.append(el('p', { class: 'muted' }, q ? 'Brak kont pasujących do wyszukiwania.' : 'Brak kont.'));
+    return;
+  }
+  const head = ['E-mail', 'Nazwa', 'Utworzono', 'Sesje', 'Własne notatki', 'Organizacje', ''];
+  const tbody = el('tbody');
+  for (const u of list) {
+    const key = 'u:' + u.id;
+    const open = state.expanded.has(key);
+    const requested = u.personal === 'requested';
+    const actions = el('div', { class: 'row-actions' });
+    if (requested) {
+      actions.append(
+        el('button', { type: 'button', class: 'btn btn-small btn-primary', onclick: () => setPersonal(u, 'allowed') }, 'Zezwól'),
+        el('button', { type: 'button', class: 'btn btn-small', onclick: () => setPersonal(u, 'off') }, 'Odrzuć'));
+    }
+    actions.append(el('button', {
+      type: 'button', class: 'btn btn-small', 'aria-expanded': String(open), onclick: () => toggle(key),
+    }, open ? 'Zwiń' : 'Szczegóły'));
+    tbody.append(el('tr', { class: requested ? 'attn' : '' },
+      el('td', {}, el('strong', {}, u.email)),
+      el('td', {}, u.name),
+      el('td', {}, fmtDate(u.createdAt)),
+      el('td', { class: 'num' }, String(u.sessions)),
+      el('td', {}, personalChip(u.personal)),
+      el('td', { class: 'num' }, String(u.vaults.length)),
+      el('td', {}, actions)));
+    if (open) tbody.append(el('tr', { class: 'detail' }, el('td', { colspan: String(head.length) }, userDetail(u))));
+  }
+  const table = el('table', {},
+    el('caption', { class: 'sr-only' }, 'Konta'),
+    el('thead', {}, el('tr', {}, ...head.map((h) => el('th', { scope: 'col' }, h)))),
+    tbody);
+  labelCells(table);
+  body.append(el('div', { class: 'table-wrap' }, table));
+}
+function userDetail(u) {
+  const orgs = el('div', {},
+    el('h4', { class: 'sub' }, 'Organizacje'),
+    rowsList(u.vaults, (v) => el('li', { class: 'list-row' },
+      el('span', { class: 'grow' }, v.name), badge(ROLE[v.role])), 'Brak organizacji.'),
+    el('h4', { class: 'sub', style: 'margin-top:14px' }, 'Przydziały czekające na właściciela'),
+    rowsList(u.assignments, (a) => el('li', { class: 'list-row' },
+      el('span', { class: 'grow' }, a.vaultName),
+      badge(ROLE[a.role]),
+      el('span', { class: 'muted small' }, 'czeka na właściciela'),
+      el('button', { type: 'button', class: 'btn btn-small', onclick: () => cancelAssignment(u, a) }, 'Anuluj przydział')),
+    'Brak oczekujących przydziałów.'));
+
+  const orgChoices = state.vaults.filter((v) => v.kind === 'organizacja');
+  const vaultSel = el('select', {}, ...orgChoices.map((v) => el('option', { value: v.id }, v.name)));
+  const roleSel = el('select', {}, ...ROLE_OPTIONS.map(([val, label]) => el('option', { value: val }, label)));
+  const assignForm = el('form', {
+    class: 'assign-form',
+    onsubmit: (ev) => {
+      ev.preventDefault();
+      if (vaultSel.value) assignUser(u, vaultSel.value, roleSel.value);
+    },
+  },
+    el('h4', { class: 'sub' }, 'Przydziel do organizacji'),
+    orgChoices.length
+      ? el('label', { class: 'field' }, el('span', {}, 'Organizacja'), vaultSel)
+      : el('p', { class: 'muted small' }, 'Brak organizacji do przydziału.'),
+    el('label', { class: 'field' }, el('span', {}, 'Rola'), roleSel),
+    el('div', { class: 'row-actions' },
+      el('button', { type: 'submit', class: 'btn btn-primary', disabled: !orgChoices.length }, 'Przydziel')));
+
+  const p = u.personal;
+  const personalActions = el('div', { class: 'row-actions' }, personalChip(p));
+  if (p === 'requested') {
+    personalActions.append(
+      el('button', { type: 'button', class: 'btn btn-small btn-primary', onclick: () => setPersonal(u, 'allowed') }, 'Zezwól'),
+      el('button', { type: 'button', class: 'btn btn-small', onclick: () => setPersonal(u, 'off') }, 'Odrzuć'));
+  } else if (p === 'allowed') {
+    personalActions.append(el('button', { type: 'button', class: 'btn btn-small', onclick: () => setPersonal(u, 'off') }, 'Wyłącz'));
+  } else {
+    personalActions.append(el('button', { type: 'button', class: 'btn btn-small', onclick: () => setPersonal(u, 'allowed') }, 'Włącz'));
+  }
+  const personalCol = el('div', {}, el('h4', { class: 'sub' }, 'Własne notatki'), personalActions);
+
+  const accountCol = el('div', {},
+    el('h4', { class: 'sub' }, 'Konto'),
+    kvList([
+      ['Utworzono', fmtDate(u.createdAt, false)],
+      ['Sesje', u.sessions],
+      ['Własne notatki (rozmiar)', fmtBytes(u.personalBytes)],
+    ]),
+    el('div', { class: 'row-actions', style: 'margin-top:12px' },
+      el('button', { type: 'button', class: 'btn btn-danger-text', onclick: () => openDeleteDialog(u) }, 'Usuń konto')));
+
+  return el('div', { class: 'detail-grid' }, orgs, assignForm, personalCol, accountCol);
+}
+function setPersonal(u, value) {
+  return run(() => api('PATCH', '/users/' + enc(u.id), { personal: value }),
+    value === 'allowed' ? 'Własne notatki włączone.' : 'Własne notatki wyłączone.', loadUsers);
+}
+function assignUser(u, vaultId, role) {
+  return run(() => api('POST', '/users/' + enc(u.id) + '/assignments', { vaultId, role }),
+    'Przydział zapisany. Czeka na właściciela organizacji.', loadUsers);
+}
+function cancelAssignment(u, a) {
+  return run(() => api('DELETE', '/users/' + enc(u.id) + '/assignments/' + enc(a.vaultId)),
+    'Przydział anulowany.', loadUsers);
+}
+// Two steps: DELETE without apply previews the effects, DELETE with apply=1 removes the account.
+function openDeleteDialog(u) {
+  openDialog('Usunąć konto?', (ctx) => {
+    let previewOk = false;
+    const preview = el('div', { class: 'preview' }, el('p', { class: 'muted' }, 'Sprawdzanie, co zostanie usunięte…'));
+    const input = el('input', { id: 'del-confirm', type: 'text', autocomplete: 'off', spellcheck: 'false' });
+    const sync = () => { confirmBtn.disabled = !(previewOk && input.value.trim() === u.email); };
+    ctx.button('Anuluj', 'btn-ghost', () => ctx.close(), { autofocus: true });
+    const confirmBtn = ctx.button('Usuń konto na stałe', 'btn-danger', async () => {
+      await api('DELETE', '/users/' + enc(u.id) + '?apply=1');
+      ctx.close();
+      notice('Konto usunięte.', false);
+      await loadUsers().catch(onError);
+    });
+    confirmBtn.disabled = true;
+    input.addEventListener('input', sync);
+    ctx.body.append(
+      preview,
+      el('label', { class: 'field' },
+        el('span', {}, 'Wpisz adres e-mail konta, aby potwierdzić: ', el('strong', {}, u.email)),
+        input));
+    api('DELETE', '/users/' + enc(u.id)).then((p) => {
+      clear(preview);
+      preview.append(
+        el('p', {}, 'Konto i jego sesje zostaną usunięte.'),
+        el('h3', { class: 'sub' }, 'Sejfy usunięte razem z kontem'),
+        rowsList(p.vaults, (n) => el('li', {}, n), 'Brak.'),
+        el('h3', { class: 'sub' }, 'Organizacje, które konto opuści'),
+        rowsList(p.left, (n) => el('li', {}, n), 'Brak.'));
+      previewOk = true;
+      sync();
+    }, (e) => {
+      clear(preview);
+      ctx.setError(e.message);
+    });
+  });
+}
+
+// Storage
+async function loadStorage() {
+  state.storage = await api('GET', '/storage');
+  renderStorage();
+  startPollingIfNeeded();
+}
+function migrationActive(s) {
+  const m = s && s.migration;
+  return !!m && !m.finishedAt && !m.error;
+}
+function startPollingIfNeeded() {
+  if (state.view === 'storage' && migrationActive(state.storage) && !state.pollTimer) {
+    state.pollTimer = setTimeout(pollTick, POLL_MS);
+  }
+}
+function stopPoll() {
+  clearTimeout(state.pollTimer);
+  state.pollTimer = 0;
+}
+async function pollTick() {
+  state.pollTimer = 0;
+  try {
+    state.storage = await api('GET', '/storage');
+  } catch (e) {
+    onError(e);
+    return;
+  }
+  if (state.view !== 'storage') return;
+  renderStorage();
+  startPollingIfNeeded();
+}
+function renderStorage() {
+  const body = $('storage-body');
+  clear(body);
+  const s = state.storage;
+  const busy = migrationActive(s);
+  const current = s.current;
+  const targets = s.available;
+  const others = targets.filter((t) => t !== current);
+
+  const currentCard = cardWith('Obecny magazyn',
+    big(BACKEND[current]),
+    kvList([['Obiekty', s.objects], ['Rozmiar', fmtBytes(s.bytes)]]));
+
+  const targetsCard = cardWith('Dostępne magazyny',
+    rowsList(targets, (t) => el('li', { class: 'list-row' },
+      el('span', { class: 'grow' }, BACKEND[t]),
+      t === current ? badge('aktywny') : null), 'Brak magazynów.'),
+    others.length
+      ? el('div', { class: 'row-actions', style: 'margin-top:12px' },
+        ...others.map((t) => el('button', {
+          type: 'button', class: 'btn btn-primary', disabled: busy,
+          onclick: () => confirmMigrate(t),
+        }, 'Przenieś pliki do ' + BACKEND[t])))
+      : el('p', { class: 'muted small' }, 'Drugi magazyn nie jest skonfigurowany. Ustawienie NOTES_SEAWEEDFS_FILER udostępnia SeaweedFS.'));
+
+  const m = s.migration;
+  const migrationCard = m
+    ? cardWith('Migracja',
+      el('p', {}, (m.error ? 'Zatrzymana z błędem' : m.finishedAt ? 'Zakończona' : 'W toku') + ' · cel: ' + BACKEND[m.target]),
+      el('div', { style: 'margin-top:12px' }, bar(pct(m.done, m.total), m.error ? 'danger' : '',
+        'Postęp: ' + m.done + ' z ' + m.total + ' obiektów')),
+      el('p', { class: 'muted' }, 'Obiekty: ' + m.done + ' z ' + m.total + ' · bajty: ' + fmtBytes(m.bytesDone) + ' z ' + fmtBytes(s.bytes)),
+      kvList([
+        ['Błędy', m.failed],
+        ['Start', fmtDate(m.startedAt, true)],
+        ...(m.finishedAt ? [['Koniec', fmtDate(m.finishedAt, true)]] : []),
+      ]),
+      m.error ? el('p', { class: 'form-error', role: 'alert', style: 'margin-top:12px' }, 'Błąd: ' + m.error) : null,
+      m.error ? el('p', { class: 'muted small', style: 'margin-top:8px' }, 'Migracja została zatrzymana. Obecny magazyn pozostaje aktywny, a nic nie zostało usunięte.') : null)
+    : cardWith('Migracja', el('p', { class: 'muted' }, 'Nie trwa żadna migracja.'));
+
+  body.append(el('div', { class: 'grid' }, currentCard, targetsCard, migrationCard));
+}
+function confirmMigrate(target) {
+  openDialog('Przenieść pliki do: ' + BACKEND[target] + '?', (ctx) => {
+    ctx.body.append(
+      el('p', {}, 'Pliki zostaną skopiowane do nowego magazynu. Każdy skopiowany plik jest odczytywany z celu i sprawdzany (długość i skrót SHA-256).'),
+      el('p', {}, 'Dopiero po przeniesieniu wszystkich plików magazyn zostanie przełączony. Jeśli którykolwiek plik się nie uda, migracja się zatrzyma, obecny magazyn pozostanie aktywny i nic nie zostanie usunięte.'));
+    ctx.button('Anuluj', 'btn-ghost', () => ctx.close(), { autofocus: true });
+    ctx.button('Rozpocznij migrację', 'btn-primary', async () => {
+      await api('POST', '/storage/migrate', { target });
+      ctx.close();
+      notice('Migracja rozpoczęta.', false);
+      await loadStorage().catch(onError);
+    });
+  });
+}
+
+// Registration codes. The server gives dates in seconds; fmtDate takes milliseconds.
+async function loadSignup() {
+  state.signup = (await api('GET', '/signup-codes')).codes;
+  renderSignup();
+}
+function renderSignup() {
+  const body = $('signup-body');
+  clear(body);
+  body.append(el('p', {}, 'Bez kodu albo linku zaproszenia do organizacji nie da się założyć konta. Kod działa raz.'));
+  body.append(signupForm());
+  if (state.freshCode) body.append(freshCodeBox(state.freshCode));
+  body.append(signupTable());
+}
+function signupForm() {
+  const err = el('p', { class: 'form-error', role: 'alert', hidden: true });
+  const label = el('input', { type: 'text', maxlength: '80', autocomplete: 'off' });
+  const days = el('input', { type: 'number', min: '1', max: '90', value: '7' });
+  const submit = el('button', { type: 'submit', class: 'btn btn-primary' }, 'Utwórz kod');
+  return el('form', {
+    class: 'quota-form',
+    onsubmit: async (ev) => {
+      ev.preventDefault();
+      err.hidden = true;
+      const n = Number(days.value);
+      if (!Number.isInteger(n) || n < 1 || n > 90) {
+        err.textContent = 'Ważność podaj w dniach: od 1 do 90.';
+        err.hidden = false;
+        days.focus();
+        return;
+      }
+      submit.disabled = true;
+      try {
+        state.freshCode = await api('POST', '/signup-codes', { label: label.value.trim(), days: n });
+        notice('Kod utworzony.', false);
+        await loadSignup();
+      } catch (e) {
+        err.textContent = e.message;
+        err.hidden = false;
+      } finally {
+        submit.disabled = false;
+      }
+    },
+  },
+    el('label', { class: 'field' }, el('span', {}, 'Dla kogo (opcjonalnie)'), label),
+    el('label', { class: 'field' }, el('span', {}, 'Ważny (dni)'), days),
+    el('div', { class: 'row-actions' }, submit),
+    err);
+}
+function freshCodeBox(made) {
+  const text = el('span', { class: 'code-text' }, made.code);
+  const copy = el('button', { type: 'button', class: 'btn btn-small btn-primary' }, 'Kopiuj');
+  copy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(made.code);
+      notice('Skopiowano kod.', false);
+    } catch {
+      // no clipboard here (plain HTTP on the LAN): select the code so it can be copied by hand
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      notice('Nie udało się skopiować. Kod jest zaznaczony: skopiuj go ręcznie.', true);
+    }
+  });
+  return el('section', { class: 'card code-fresh' },
+    el('h3', { class: 'card-title' }, 'Nowy kod'),
+    el('div', { class: 'code-row' }, text, copy),
+    el('p', { class: 'muted small' }, 'Kod widać tylko teraz. Przekaż go tej osobie.'),
+    el('p', { class: 'muted small' }, 'Wygasa: ' + fmtDate(made.expiresAt * 1000)));
+}
+function signupState(c) {
+  if (c.usedAt) return 'użyty przez ' + (c.usedByEmail || 'konto, które już nie istnieje');
+  return c.expiresAt * 1000 <= Date.now() ? 'wygasł' : 'nieużyty';
+}
+function signupTable() {
+  if (!state.signup.length) return el('p', { class: 'muted' }, 'Nie ma jeszcze kodów rejestracyjnych.');
+  const head = ['Dla kogo', 'Utworzono', 'Wygasa', 'Stan', ''];
+  const tbody = el('tbody');
+  for (const c of state.signup) {
+    tbody.append(el('tr', {},
+      el('td', {}, c.label || '—'),
+      el('td', {}, fmtDate(c.createdAt * 1000)),
+      el('td', {}, fmtDate(c.expiresAt * 1000)),
+      el('td', {}, signupState(c)),
+      el('td', {}, c.usedAt ? null : el('button', {
+        type: 'button', class: 'btn btn-small btn-danger-text', onclick: () => confirmRevokeSignup(c),
+      }, 'Usuń'))));
+  }
+  const table = el('table', {},
+    el('caption', { class: 'sr-only' }, 'Kody rejestracyjne'),
+    el('thead', {}, el('tr', {}, ...head.map((h) => el('th', { scope: 'col' }, h)))),
+    tbody);
+  labelCells(table);
+  return el('div', { class: 'table-wrap' }, table);
+}
+function confirmRevokeSignup(c) {
+  confirmDialog('Usunąć kod?', 'Kod przestanie działać. Osoba, której go dano, nie założy konta.', 'Usuń', 'btn-danger', async () => {
+    await api('DELETE', '/signup-codes/' + enc(c.id));
+    notice('Kod usunięty.', false);
+    await loadSignup();
+  });
+}
+
+// Boot, login, logout, navigation
+$('login-form').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const pw = $('pw');
+  const btn = $('login-btn');
+  const note = $('login-note');
+  if (!pw.value) {
+    note.textContent = 'Podaj hasło.';
+    note.hidden = false;
+    pw.focus();
+    return;
+  }
+  btn.disabled = true;
+  try {
+    await api('POST', '/login', { password: pw.value });
+    pw.value = '';
+    showApp('overview');
+  } catch (e) {
+    note.textContent = e.serverText || (e.status === 429
+      ? 'Zbyt wiele nieudanych prób. Spróbuj ponownie za 15 minut.'
+      : e.status === 401 ? 'Nieprawidłowe hasło.' : e.message);
+    note.hidden = false;
+    pw.select();
+  } finally {
+    btn.disabled = false;
+  }
+});
+$('logout').addEventListener('click', async () => {
+  let message = 'Wylogowano.';
+  try { await api('POST', '/logout'); } catch (e) {
+    if (e.status !== 401) message = 'Nie udało się zakończyć sesji na serwerze: ' + e.message;
+  }
+  showLogin(message);
+});
+for (const b of document.querySelectorAll('.nav button')) {
+  b.addEventListener('click', () => showView(b.dataset.view));
+}
+$('user-filter').addEventListener('input', () => renderUsers());
+
+// A 401 from the first overview request lands on the login screen through onError.
+showApp('overview');
+</script>
+</body>
+</html>

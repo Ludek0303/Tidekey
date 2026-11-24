@@ -1,0 +1,8 @@
+Pierwsza kolumna tekstu
+zawiera zdania o pogodzie,
+która w środę będzie
+słoneczna i ciepła.
+Druga kolumna opisuje
+wyniki sprzedaży w maju:
+wzrost o 12,5 procent
+względem kwietnia.

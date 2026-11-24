@@ -1,0 +1,121 @@
+# Wydanie serwera MCP „Notatki” (docs/MCP.md §10, §17). Uruchamia się ręcznie albo na tag mcp-v*.
+# Publikacja do npm tylko tutaj, z NPM_TOKEN i provenance; z komputera nigdy.
+# Ręczne uruchomienie publikuje tylko przy zaznaczeniu „publish”. Tag mcp-vX.Y.Z musi zgadzać się z mcp/package.json.
+name: Wydanie MCP
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Opublikuj do npm (bez zaznaczenia: tylko budowa, podpis i paczki)"
+        type: boolean
+        default: false
+  push:
+    tags:
+      - "mcp-v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Budowa dwa razy i porównanie skrótów
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Sprawdzenie wersji tagu
+        run: |
+          v=$(node -p "require('./mcp/package.json').version")
+          if [ "$GITHUB_REF_TYPE" = tag ] && [ "$GITHUB_REF_NAME" != "mcp-v$v" ]; then
+            echo "Tag $GITHUB_REF_NAME nie zgadza się z wersją mcp/package.json ($v)" >&2
+            exit 1
+          fi
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: "22"
+      - name: Toolchain i wasm-pack
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-pack --locked
+      - name: Zależności UI i WASM (ui/src/wasm, ui/node_modules)
+        working-directory: ui
+        run: |
+          npm ci --ignore-scripts
+          npm run wasm
+      - name: Zip (paczka .mcpb)
+        run: sudo apt-get install -y zip
+      - name: Budowa powtarzalna (dwie niezależne budowy)
+        run: bash mcp/scripts/repro-check.sh
+      - name: Paczki wydania (dist, release, SBOM, SHA256SUMS)
+        working-directory: mcp
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+          npm run release
+      - uses: actions/upload-artifact@v4.6.2
+        with:
+          name: mcp-release
+          path: |
+            mcp/dist/notatki-mcp.mjs
+            mcp/release/
+          if-no-files-found: error
+
+  sign:
+    name: Podpis (Sigstore, OIDC)
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4.3.0
+        with:
+          name: mcp-release
+          path: mcp
+      - uses: sigstore/cosign-installer@v3.8.1
+      # Alternatywa: minisign (klucz offline w sekrecie, `minisign -Sm plik`); klucz publiczny na stronie aplikacji.
+      - name: Podpis plików wydania
+        working-directory: mcp/release
+        run: |
+          for f in notatki-mcp.mjs notatki-mcp-*.mcpb SHA256SUMS sbom.cdx.json; do
+            cosign sign-blob --yes --bundle "$f.sigstore.json" "$f"
+          done
+      - uses: actions/upload-artifact@v4.6.2
+        with:
+          name: mcp-sigs
+          path: mcp/release/*.sigstore.json
+          if-no-files-found: error
+
+  publish:
+    name: Publikacja npm (provenance)
+    needs: sign
+    if: github.ref_type == 'tag' || inputs.publish
+    runs-on: ubuntu-24.04
+    environment: mcp-release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4.3.0
+        with:
+          name: mcp-release
+          path: mcp
+      - uses: actions/download-artifact@v4.3.0
+        with:
+          name: mcp-sigs
+          path: mcp/release
+      - name: Publikacja
+        working-directory: mcp
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public

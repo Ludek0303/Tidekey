@@ -1,0 +1,27 @@
+/target/
+/app/src-tauri/target/
+/ui/node_modules/
+/ui/dist/
+/ui/src/wasm/
+/ui/preview/wasm/
+/models/
+/test-results/
+# secrets, data backups, dependencies, tool state (never in the repository, docs/MCP.md §17)
+.env
+.env.*
+!.env.example
+/node_modules/
+/backups/
+/.swarm/
+/.claude-flow/
+/ruvector.db
+/agentdb.rvf*
+graphify-out/
+/docs/graphify-out/cache/
+/pomiary/
+/crates/preview/fuzz/target/
+/crates/preview/fuzz/corpus/
+/crates/preview/fuzz/artifacts/
+/crates/preview/fuzz/Cargo.lock
+/ui/preview/wasm-dwg/
+/scripts/licencje/.cache/

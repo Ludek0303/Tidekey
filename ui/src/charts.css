@@ -1,0 +1,62 @@
+/* Charts (charts.ts, chartdialog.ts). Colours: a categorical order, never cycled; text is always var(--text) or var(--muted). */
+:root {
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+  --chart-6: #0ca30c;
+  --chart-7: #9085e9;
+  --chart-8: #e66767;
+  --chart-grid: color-mix(in srgb, var(--text) 12%, transparent);
+}
+:root[data-theme="light"] {
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --chart-6: #008300;
+  --chart-7: #6250d6;
+  --chart-8: #e34948;
+}
+
+.chart-box { position: relative; width: 100%; margin: 8px 0; }
+.chart-svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-ui); }
+.chart-grid { stroke: var(--chart-grid); stroke-width: 1; }
+.chart-title { font-size: 14px; font-weight: 600; fill: var(--text); }
+.chart-empty { font-size: 13px; fill: var(--muted); }
+.chart-tick, .chart-cat, .chart-legend-share { font-size: 11px; fill: var(--muted); }
+.chart-value, .chart-legend-label { font-size: 11px; fill: var(--text); }
+.chart-legend-label { font-size: 12px; }
+.chart-legend-share { font-size: 12px; }
+.chart-mark { fill: var(--chart-1); }
+.chart-slice { stroke: var(--editor-bg); stroke-width: 2; stroke-linejoin: round; }
+.chart-slice-label { font-size: 11px; font-weight: 600; fill: var(--text); stroke: var(--editor-bg); stroke-width: 3; stroke-linejoin: round; paint-order: stroke; }
+.chart-item:hover .chart-mark, .chart-item:hover .chart-slice { opacity: 0.85; }
+.chart-tip {
+  position: absolute; z-index: 2; pointer-events: none; padding: 4px 8px; font-size: 12px; white-space: nowrap;
+  color: var(--text); background: var(--panel); border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--shadow-sm);
+}
+
+/* Live Preview: the chart with the caret away; the pencil shows on hover or keyboard focus. */
+.cm-lp-chart { position: relative; margin: 8px 0; border-radius: 10px; cursor: pointer; outline: none; }
+.cm-lp-chart:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+.cm-lp-chart-edit { position: absolute; top: 8px; right: 8px; opacity: 0; }
+.cm-lp-chart:hover .cm-lp-chart-edit, .cm-lp-chart:focus-visible .cm-lp-chart-edit { opacity: 1; }
+
+/* The dialog: 720px wide, the full width on a phone (the .modal rules in workspace.css). */
+.modal.chart-dialog { width: min(720px, calc(100vw - 32px)); }
+.chart-types { display: flex; gap: 8px; flex-wrap: wrap; }
+.chart-type { display: inline-flex; align-items: center; gap: 6px; }
+.chart-type[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--sel); }
+.chart-field { display: grid; gap: 4px; color: var(--muted); font-size: 12px; }
+.chart-rows { display: grid; gap: 6px; }
+.chart-row { display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; align-items: center; }
+.chart-row .task-input[aria-invalid="true"] { border-color: var(--danger); }
+.chart-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.chart-note { margin: 0; color: var(--muted); font-size: 12px; }
+@media (max-width: 600px) {
+  .modal.chart-dialog { width: 100%; }
+  .chart-row { grid-template-columns: 1fr 96px auto; }
+}

@@ -1,0 +1,35 @@
+[package]
+name = "notes-node"
+version = "0.1.0"
+edition = "2024"
+license.workspace = true
+publish = false
+
+[dependencies]
+axum = { version = "0.8", features = ["ws"] }
+async-trait = "0.1.92"
+base64 = "0.22"
+hmac = "0.13.0"
+hyper-util = { version = "0.1.21", features = ["client-legacy", "http1", "tokio"] }
+argon2 = "0.5"
+blake3 = "1.8.7"
+blake2 = "0.10.6"
+ed25519-dalek = "3.0.0"
+iroh = "1.4"
+libc = "0.2"
+notes-sync = { path = "../sync", features = ["net"] }
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.11.1"
+tokio-util = { version = "0.7.20", features = ["io"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "signal", "io-util", "sync", "time", "fs"] }
+tower-http = { version = "0.6", features = ["fs"] }
+zeroize = "1.9.1"
+notes-core = { path = "../core" }
+tempfile = "3.27.0"
+
+[dev-dependencies]
+# already in the tree through axum's ws feature: drives the sync socket in tests (websync_ws_tests.rs)
+tokio-tungstenite = "0.29"
+futures-util = { version = "0.3", default-features = false, features = ["sink"] }

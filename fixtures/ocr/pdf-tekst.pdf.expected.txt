@@ -1,0 +1,23 @@
+Dokument testowy OCR: PDF z warstwą tekstu
+FAKTURA VAT nr 12/03/2026
+Sprzedawca: Przedsiębiorstwo Usługowe Żółw sp. z o.o.
+ul. Źródlana 15, 00-950 Łódź
+Nabywca: Gęślą Jaźń Spółdzielnia Mieszkaniowa
+Termin płatności: 15 marca 2026 r.
+Usługa hostingu serwera — 1 240,00 zł
+Zażółć gęślą jaźń. Pchnąć w tę łódź jeża
+lub ośm skrzyń fig. Ćma ślizga się po żółtym liściu.
+Razem do zapłaty: 1 525,20 zł (słownie: tysiąc pięćset
+dwadzieścia pięć złotych 20/100)
+Uwagi: płatność przelewem na rachunek 12 3456 7890
+Dziękujemy za współpracę i życzymy miłego dnia!
+
+Strona 2: dwie kolumny
+Pierwsza kolumna tekstu
+zawiera zdania o pogodzie,
+która w środę będzie
+słoneczna i ciepła.
+Druga kolumna opisuje
+wyniki sprzedaży w maju:
+wzrost o 12,5 procent
+względem kwietnia.

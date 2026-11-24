@@ -1,0 +1,57 @@
+/* Diagrams (diagram.ts, diagramdialog.ts). Colours come from the chart tokens in charts.css; text is var(--text) or var(--muted). */
+.dg-frame { position: relative; width: 100%; margin: 8px 0; }
+.dg-svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-ui); }
+.dg-title { font-size: 14px; font-weight: 600; fill: var(--text); }
+.dg-empty { font-size: 13px; fill: var(--muted); }
+.dg-c-szary { --dg-stroke: color-mix(in srgb, var(--text) 38%, transparent); --dg-fill: var(--panel); }
+.dg-c-niebieski { --dg-stroke: var(--chart-1); --dg-fill: color-mix(in srgb, var(--chart-1) 14%, var(--editor-bg)); }
+.dg-c-pomarańczowy { --dg-stroke: var(--chart-2); --dg-fill: color-mix(in srgb, var(--chart-2) 14%, var(--editor-bg)); }
+.dg-c-zielony { --dg-stroke: var(--chart-3); --dg-fill: color-mix(in srgb, var(--chart-3) 14%, var(--editor-bg)); }
+.dg-c-żółty { --dg-stroke: var(--chart-4); --dg-fill: color-mix(in srgb, var(--chart-4) 14%, var(--editor-bg)); }
+.dg-c-różowy { --dg-stroke: var(--chart-5); --dg-fill: color-mix(in srgb, var(--chart-5) 14%, var(--editor-bg)); }
+.dg-c-fioletowy { --dg-stroke: var(--chart-7); --dg-fill: color-mix(in srgb, var(--chart-7) 14%, var(--editor-bg)); }
+.dg-c-czerwony { --dg-stroke: var(--chart-8); --dg-fill: color-mix(in srgb, var(--chart-8) 14%, var(--editor-bg)); }
+.dg-box { stroke: var(--dg-stroke); stroke-width: 1.5; fill: var(--dg-fill); }
+.dg-node:hover .dg-box { stroke-width: 2; }
+.dg-label { font: 500 13px var(--font-ui); fill: var(--text); }
+.dg-line { fill: none; stroke: color-mix(in srgb, var(--text) 55%, transparent); stroke-width: 1.5; stroke-linejoin: round; }
+.dg-head { fill: color-mix(in srgb, var(--text) 55%, transparent); }
+.dg-edge-bg { fill: var(--editor-bg); }
+.dg-edge-label { font-size: 11.5px; fill: var(--muted); }
+.dg-svg.dg-editable .dg-node { cursor: grab; touch-action: none; }
+
+/* Live Preview: the diagram with the caret away; the pencil shows on hover or keyboard focus. */
+.cm-lp-diagram { position: relative; margin: 8px 0; border-radius: 10px; cursor: pointer; outline: none; }
+.cm-lp-diagram:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+.cm-lp-diagram-edit { position: absolute; top: 8px; right: 8px; opacity: 0; }
+.cm-lp-diagram:hover .cm-lp-diagram-edit, .cm-lp-diagram:focus-visible .cm-lp-diagram-edit { opacity: 1; }
+
+/* The dialog: 760px wide, the full width below 640px (the .modal rules in workspace.css). Columns are minmax(0, …) and
+   fields may shrink, so a row never pushes the dialog wider than its box: there is no horizontal scroll. */
+.modal.diagram-dialog { width: min(760px, calc(100vw - 32px)); max-width: 100%; box-sizing: border-box; overflow-x: hidden; }
+.dg-dirs { display: flex; gap: 8px; flex-wrap: wrap; }
+.dg-dir[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--sel); }
+.dg-section { display: grid; gap: 8px; min-width: 0; }
+.dg-heading { margin: 4px 0 0; font-size: 13px; font-weight: 600; color: var(--muted); }
+.dg-field { display: grid; gap: 4px; color: var(--muted); font-size: 12px; min-width: 0; }
+.dg-rows { display: grid; gap: 6px; min-width: 0; }
+.dg-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; min-width: 0; }
+.dg-row > * { min-width: 0; }
+.dg-row .task-input { width: 100%; box-sizing: border-box; min-width: 0; }
+.dg-edge-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) auto; }
+.dg-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+.dg-swatch { width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 0; background: var(--dg-stroke); cursor: pointer; }
+.dg-swatch[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dg-swatch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dg-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.dg-note { margin: 0; color: var(--muted); font-size: 12px; }
+/* Below 640px a connection takes two lines: from and kind, then to and label, then the remove button; a box keeps its
+   swatches on a line of their own. */
+@media (max-width: 639px) {
+  .modal.diagram-dialog { width: 100%; }
+  .dg-edge-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .dg-edge-row > .icon-btn { justify-self: end; }
+  .dg-box-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .dg-box-row > .dg-swatches { grid-column: 1; grid-row: 2; }
+  .dg-box-row > .icon-btn { grid-column: 2; grid-row: 1; }
+}

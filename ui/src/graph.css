@@ -1,0 +1,32 @@
+/* Graph view (ARCHITEKTURA §4.15): one canvas per graph; the global one has a floating settings panel. */
+.graph-view { position: relative; flex: 1; min-height: 0; overflow: hidden; background: var(--editor-bg); }
+.graph-view[hidden] { display: none; }
+.graph-view canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.graph-view canvas:focus-visible { box-shadow: inset 0 0 0 1px var(--accent); }
+
+.graph-gear { position: absolute; top: 8px; right: 8px; z-index: 1; background: var(--panel); }
+.graph-panel {
+  position: absolute; top: 40px; right: 8px; z-index: 1; width: 260px; max-height: calc(100% - 52px); overflow: auto;
+  padding: 8px; background: var(--panel); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--text);
+}
+.graph-panel[hidden], .graph-sec-body[hidden] { display: none; }
+.graph-sec + .graph-sec { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 6px; }
+.graph-sec-head {
+  display: flex; align-items: center; gap: 6px; width: 100%; padding: 4px 2px; border: none; background: none;
+  color: var(--text); font: inherit; font-weight: 600; cursor: pointer; text-align: left;
+}
+.graph-sec-head .icon { transition: transform 120ms ease; }
+.graph-sec-head[aria-expanded="false"] .icon { transform: rotate(-90deg); }
+.graph-sec-body { display: flex; flex-direction: column; gap: 6px; padding: 4px 2px 8px; }
+.graph-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--muted); }
+.graph-search { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; font: inherit; }
+.graph-check { accent-color: var(--accent); cursor: pointer; }
+.graph-slider { display: flex; align-items: center; gap: 6px; }
+.graph-slider input { accent-color: var(--accent); width: 96px; cursor: pointer; }
+.graph-slider output { min-width: 32px; text-align: right; color: var(--muted); }
+.graph-groups { display: flex; flex-direction: column; gap: 6px; }
+.graph-group { display: flex; align-items: center; gap: 4px; }
+.graph-group input[type="text"] { flex: 1; min-width: 0; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; font: inherit; }
+.graph-group input[type="color"] { width: 24px; height: 22px; padding: 0; border: none; background: none; cursor: pointer; }
+.graph-add, .graph-animate { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; }
+

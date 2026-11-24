@@ -1,0 +1,41 @@
+/* Selection and file drops in the file tree (tree.ts, explorer.ts). */
+
+.tree-spacer { user-select: none; }
+.tree-row.is-selected { background: var(--sel); }
+.tree.is-drop-root { box-shadow: inset 0 0 0 2px var(--accent); }
+.tree-row.is-drop { background: var(--sel); box-shadow: inset 0 0 0 2px var(--accent); }
+
+.tree-check {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0 6px 0 4px;
+  border: 1.5px solid var(--muted);
+  border-radius: 4px;
+}
+.tree-check.is-on { background: var(--accent-solid); border-color: var(--accent-solid); }
+.tree-check.is-on::after {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 8px;
+  margin: 2px auto;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.tree-mode-btn[aria-pressed="true"] { color: var(--accent); background: var(--sel); }
+
+.tree-footer {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.tree-footer[hidden], .tree-footer-hint[hidden], .tree-footer-sel[hidden] { display: none; }
+.tree-footer-hint { margin: 0; color: var(--accent); }
+.tree-footer-sel { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tree-footer-sel > span { flex-basis: 100%; color: var(--muted); }
+.tree-footer-sel .btn { padding: 4px 10px; font-size: 12px; white-space: nowrap; }

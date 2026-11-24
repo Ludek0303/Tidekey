@@ -1,0 +1,20 @@
+# Notes data on the two-disk Btrfs mirror (scripts/lustro.sh, docs/DOCKER-WEB.md "Dwa dyski (lustro)"), on top of
+# compose.yml:   docker compose --env-file .env -f docker/compose.yml -f docker/compose.lustro.yml ...
+# scripts/wdrozenie.sh and scripts/kopia.sh add this file by themselves when .env has NOTES_LUSTRO.
+# create_host_path: false — when the mirror is not mounted the folder is missing and the service does not start,
+# instead of starting empty on the system disk.
+services:
+  notes:
+    volumes:
+      - type: bind
+        source: ${NOTES_LUSTRO:?Ustaw NOTES_LUSTRO w .env (scripts/lustro.sh robi to sam)}/notes-data
+        target: /data
+        bind:
+          create_host_path: false
+  seaweedfs:
+    volumes:
+      - type: bind
+        source: ${NOTES_LUSTRO:?Ustaw NOTES_LUSTRO w .env (scripts/lustro.sh robi to sam)}/seaweed-data
+        target: /data
+        bind:
+          create_host_path: false

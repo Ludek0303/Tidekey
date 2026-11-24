@@ -1,0 +1,14 @@
+/* Point cloud: the WebGL canvas fills the frame. The zoom bar (.r-narzedzia) is styled in frame.css. */
+.r-chmura {
+  overflow: hidden;
+}
+
+.r-chmura canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}

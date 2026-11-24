@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "deny": ["WebFetch", "WebSearch", "Bash(curl:*)", "Bash(wget:*)", "Bash(nc:*)", "Bash(ssh:*)", "Bash(scp:*)"],
+    "ask": ["mcp__notatki__create_note", "mcp__notatki__append", "mcp__notatki__edit_note", "mcp__notatki__add_tasks",
+            "mcp__notatki__set_task", "mcp__notatki__move_note", "mcp__notatki__trash_note"]
+  }
+}

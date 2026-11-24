@@ -1,0 +1,14 @@
+Notatki z przeglądu projektu „Ogród wspólnoty”
+
+Zażółć gęślą jaźń: ten plik sprawdza polskie znaki w podglądzie tekstu. Ąą Ćć Ęę Łł Ńń Óó Śś Źź Żż.
+
+Lista zadań:
+- przygotować plan nasadzeń na wiosnę,
+- sprawdzić dostawę ziemi (4,5 t, faktura nr 2026/117),
+- zamówić ławki do altany — rozmowa w czwartek o 14:30.
+
+Uwagi: zażółcona gęś, łódź i świerszcz. Ścieżka: C:\Dokumenty\Ogród\plan.txt
+Pusta linia poniżej, potem długi wiersz bez spacji dla testu zawijania:
+Dlugiwierszbezspacjidlategozeniesiezawijacsieaniedoprzewijaniazaktorejstanieokno.zażółćgęśląjaźń.0123456789.0123456789.0123456789.0123456789.0123456789.0123456789.
+
+Koniec notatek.

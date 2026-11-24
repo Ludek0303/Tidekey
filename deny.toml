@@ -1,0 +1,75 @@
+# cargo-deny (docs/MCP.md §17, docs/LICENCJE.md): licenses, advisories, bans, sources. Run:
+#   cargo deny check                                                        (workspace: core, sync, web, node, bridge, preview)
+#   cargo deny --manifest-path app/src-tauri/Cargo.toml check --config deny.toml   (the Tauri app, its own workspace)
+
+[graph]
+all-features = true
+# the targets of the artifacts we build (docs/LICENCJE.md §1): node on x86_64 and aarch64, the WASM of the web page,
+# and the desktop app on Linux and Windows
+targets = [
+    "x86_64-unknown-linux-gnu",
+    "aarch64-unknown-linux-gnu",
+    "wasm32-unknown-unknown",
+    "x86_64-pc-windows-msvc",
+]
+
+[advisories]
+version = 2
+ignore = []
+
+[licenses]
+version = 2
+# one list for both workspaces: a licence or exception only one of them needs is not a finding
+unused-allowed-license = "allow"
+confidence-threshold = 0.9
+# The licences approved for dependencies (docs/UWAGI.md, 2026-11-24): permissive ones only. GPL, AGPL, LGPL in the
+# code, "non-commercial" and source-available licences are not allowed; MPL-2.0 only by name below.
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    # data licence of the Mozilla root certificates in webpki-roots (iroh's relay client in notes-node)
+    "CDLA-Permissive-2.0",
+    "CC0-1.0",
+    "ISC",
+    "MIT",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+]
+
+# MPL-2.0 only for these crates, used unchanged (the files of an MPL library stay as published; its sources are named
+# in THIRD_PARTY_NOTICES.txt). A new MPL crate, or another version of these, fails the check until it is added here.
+exceptions = [
+    # DWG drawings in the preview frame (docs/PODGLAD.md §1)
+    { crate = "acadrust@0.6.8", allow = ["MPL-2.0"] },
+    # HTTP client of iroh's port mapping (portmapper) in notes-node
+    { crate = "attohttpc@0.30.1", allow = ["MPL-2.0"] },
+    # Tauri's HTML parsing (kuchikiki, Servo's selectors) in the desktop app
+    { crate = "cssparser@0.37.0", allow = ["MPL-2.0"] },
+    { crate = "selectors@0.38.0", allow = ["MPL-2.0"] },
+    { crate = "dtoa-short@0.3.5", allow = ["MPL-2.0"] },
+    # a proc-macro of cssparser: runs only while compiling, nothing of it is in the app
+    { crate = "cssparser-macros@0.7.1", allow = ["MPL-2.0"] },
+    # dirs (config folders) in the desktop app
+    { crate = "option-ext@0.2.0", allow = ["MPL-2.0"] },
+]
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+# path dependencies between our own unpublished crates are not wildcards from a registry
+allow-wildcard-paths = true
+highlight = "all"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []
+
+# The workspace's own crates (AGPL-3.0-or-later, LICENSE) are not published and are not checked against the list.
+[licenses.private]
+ignore = true

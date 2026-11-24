@@ -1,0 +1,168 @@
+name: notes-organizations
+
+services:
+  notes:
+    image: ${NOTES_IMAGE:-notes-organizations-web:local}
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      # the source of this build, shown in "O programie" and by /api/source (AGPL-3.0 §13, docs/LICENCJE.md):
+      # NOTES_SOURCE_URL from .env (the public repository), NOTES_COMMIT set by scripts/wdrozenie.sh (git rev-parse HEAD)
+      args:
+        NOTES_SOURCE_URL: ${NOTES_SOURCE_URL:-}
+        NOTES_COMMIT: ${NOTES_COMMIT:-}
+    restart: unless-stopped
+    read_only: true
+    user: "65532:65532"
+    # the container log holds the security audit lines: rotated, so it never fills the disk (5 × 10 MB)
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
+    environment:
+      # Secure cookies are required for HTTPS; set false only for local HTTP development.
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-true}
+      # invite (default: an organization's invite link or a registration code from the admin) | open | closed
+      NOTES_REGISTRATION: ${NOTES_REGISTRATION:-invite}
+      NOTES_REGISTER_PER_HOUR: ${NOTES_REGISTER_PER_HOUR:-10}
+      NOTES_MAX_VAULTS: ${NOTES_MAX_VAULTS:-20}
+      # attachments: largest file (MB), quota per vault (MB, trash included), days in the trash, hours before an unfinished upload is dropped
+      NOTES_FILE_MAX_MB: ${NOTES_FILE_MAX_MB:-100}
+      NOTES_VAULT_FILES_MB: ${NOTES_VAULT_FILES_MB:-2048}
+      NOTES_FILE_TRASH_DAYS: ${NOTES_FILE_TRASH_DAYS:-30}
+      NOTES_UPLOAD_STALE_HOURS: ${NOTES_UPLOAD_STALE_HOURS:-24}
+      # Claude chats (docs/MCP.md, docs/DOCKER-WEB.md "Czaty Claude"): 1 switches every chat off; the oldest MCP version
+      # taken and the newest one offered (empty: 1.0.0 and the oldest)
+      NOTES_AGENTS_DISABLED: ${NOTES_AGENTS_DISABLED:-0}
+      NOTES_AGENT_MIN_VERSION: ${NOTES_AGENT_MIN_VERSION:-}
+      NOTES_AGENT_LATEST_VERSION: ${NOTES_AGENT_LATEST_VERSION:-}
+      NOTES_MAX_PARALLEL_UPLOADS: ${NOTES_MAX_PARALLEL_UPLOADS:-4}
+      # encrypted file objects live in SeaweedFS (docs/PLIKI.md §4); only this container can reach it
+      NOTES_SEAWEEDFS_FILER: http://seaweedfs:8888
+      NOTES_SEAWEEDFS_JWT_KEY: ${SEAWEEDFS_JWT_KEY:?Ustaw SEAWEEDFS_JWT_KEY w .env (scripts/wdrozenie.sh robi to sam)}
+      # the server admin's panel (docs/PANEL-ADMINA.md): its own port, published only on the LAN address below
+      NOTES_ADMIN_HTTP: 0.0.0.0:8081
+      NOTES_ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Ustaw ADMIN_PASSWORD w .env (scripts/wdrozenie.sh robi to sam)}
+    networks: [default, storage]
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - notes-data:/data
+      # speech models (docs/DOCKER-WEB.md "Modele dyktowania"): their own volume, so backups of notes-data skip them
+      - voice-models:/data/models:ro
+    ports:
+      # Keep plain HTTP private by default; put Caddy or another TLS proxy in front for public use.
+      - "${NOTES_BIND:-127.0.0.1}:${NOTES_HTTP_PORT:-8080}:8080/tcp"
+      # admin panel: never through the tunnel; set NOTES_ADMIN_BIND to this machine's LAN address to reach it from other computers
+      - "${NOTES_ADMIN_BIND:-127.0.0.1}:${NOTES_ADMIN_PORT:-8081}:8081/tcp"
+    healthcheck:
+      test: ["CMD", "/notes-node", "health", "--http", "127.0.0.1:8080"]
+      interval: 30s
+      timeout: 4s
+      start_period: 20s
+      retries: 3
+
+  # Speech models for dictation (docs/DOCKER-WEB.md "Modele dyktowania"): a one-off job, not a server. It fills the
+  # voice-models volume, which notes-node serves read-only as /models/*; every file is checked by SHA-256.
+  # scripts/wdrozenie.sh runs it on every deploy (files already in place are only re-checked).
+  #   docker compose --profile models run --rm voice-models                          # from Hugging Face / GitHub, once
+  #   docker compose --profile models run --rm voice-models --from https://other-notes-server/models
+  #   docker compose --profile models run --rm -v /path/models:/src:ro voice-models --from /src
+  voice-models:
+    image: node:22-bookworm-slim
+    profiles: ["models"]
+    # a new volume's root belongs to root; with no capabilities root writes only what it owns, and notes reads it (0644)
+    user: "0:0"
+    read_only: true
+    working_dir: /app
+    entrypoint: ["node", "--experimental-strip-types", "scripts/fetch-voice-models.mjs", "--out", "/data/models"]
+    environment:
+      VOICE_MODELS_FROM: ${VOICE_MODELS_FROM:-}
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ../scripts/fetch-voice-models.mjs:/app/scripts/fetch-voice-models.mjs:ro
+      - ../ui/src/voice/models.ts:/app/ui/src/voice/models.ts:ro
+      - voice-models:/data/models
+
+  # Store for encrypted attachments only: master + volume + filer, no S3/SFTP/IAM/WebDAV, no published ports.
+  # Pinned to 4.48 (2026-09-28, after the September 2026 security fixes) by digest. Apache-2.0 (docs/PLIKI.md).
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d
+    restart: unless-stopped
+    # the image's own "seaweed" user; a new named volume inherits its ownership, so no root step (chown/su-exec) is needed
+    user: "1000:1000"
+    command: >-
+      server -dir=/data -ip=seaweedfs -ip.bind=0.0.0.0
+      -master.port=9333 -volume.port=8081 -filer -filer.port=8888
+      -master.volumeSizeLimitMB=1024 -volume.max=0
+    environment:
+      # the filer accepts only requests signed by notes-node (HS256 JWT); the key never leaves the server
+      WEED_JWT_FILER_SIGNING_KEY: ${SEAWEEDFS_JWT_KEY:?Ustaw SEAWEEDFS_JWT_KEY w .env}
+      WEED_JWT_FILER_SIGNING_READ_KEY: ${SEAWEEDFS_JWT_KEY:?Ustaw SEAWEEDFS_JWT_KEY w .env}
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - seaweed-data:/data
+    networks: [storage]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:9333/cluster/status"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+  caddy:
+    image: caddy:2.10-alpine
+    profiles: ["tls"]
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      notes:
+        condition: service_healthy
+
+  # Cloudflare Tunnel: Cloudflare terminates HTTPS and forwards to notes:8080; no inbound ports are opened.
+  # In the Cloudflare dashboard (Zero Trust → Networks → Tunnels) add a public hostname with service http://notes:8080.
+  cloudflared:
+    image: ${CLOUDFLARED_IMAGE:-cloudflare/cloudflared:latest}
+    profiles: ["cloudflare"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      notes:
+        condition: service_healthy
+
+networks:
+  # no route out and no published ports: SeaweedFS is reachable only from the notes container
+  storage:
+    internal: true
+
+volumes:
+  notes-data:
+  voice-models:
+  seaweed-data:
+  caddy-data:
+  caddy-config:

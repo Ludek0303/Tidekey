@@ -1,0 +1,29 @@
+[package]
+name = "notes-app"
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+publish = false
+description = "Desktop shell of the notes app: Tauri 2 commands over notes-bridge"
+
+# Not a workspace member (see the root Cargo.toml `exclude`), so `cargo test --workspace` never needs WebKit.
+# Build it with `cargo build --manifest-path app/src-tauri/Cargo.toml`.
+[dependencies]
+notes-bridge = { path = "../../crates/bridge", features = ["os-keyring"] }
+notes-core = { path = "../../crates/core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+percent-encoding = "2.3.2"
+blake3 = "1.8.7"
+zeroize = "1.9.1"
+tauri = "2.12.2"
+tauri-plugin-dialog = "2.8.1"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[build-dependencies]
+tauri-build = "2"
+
+# its own workspace root: built on its own, not part of the root workspace
+[workspace]

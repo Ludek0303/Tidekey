@@ -1,0 +1,28 @@
+# Pliki krytyczne dla bezpieczeństwa (docs/MCP.md §15.2). Kod w nich pisze tylko Opus;
+# Haiku może dopisywać testy obok, nie zmienia tych plików. Każdy diff przegląda osobna sesja Opusa.
+
+# koperty, szyfrowanie, podpisy, certyfikaty
+ui/src/vaults.ts
+ui/src/sealed.ts
+ui/src/signing.ts
+ui/src/filecrypto.ts
+ui/src/protected.ts
+# checkEntry, weryfikacja przy łączeniu, rotacja, guardy uprawnień
+ui/src/browserauth.ts
+# serwer: sesje, role, sejfy, rotacja, synchronizacja, pliki
+crates/node/src/auth.rs
+crates/node/src/vaults.rs
+crates/node/src/websync.rs
+crates/node/src/http.rs
+crates/node/src/files.rs
+# nowe (etapy 1–8): sesja agent, parowanie, dowód posiadania, propozycje
+crates/node/src/agents.rs
+crates/node/src/agentproof.rs
+crates/node/src/proposals.rs
+ui/src/agentcert.ts
+ui/src/proposals.ts
+ui/src/permissionmarks.ts
+mcp/src/keys.ts
+mcp/src/proof.ts
+mcp/src/scope.ts
+mcp/src/session.ts

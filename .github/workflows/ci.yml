@@ -1,0 +1,157 @@
+# Kontrole przy każdej zmianie (docs/MCP.md §17). Uprawnienia tylko do odczytu; sekrety nie są potrzebne.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    name: Rust (testy, clippy, audyt zależności)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Toolchain
+        run: rustup toolchain install stable --profile minimal --component clippy
+      - name: Testy
+        run: cargo test --workspace
+      - name: Clippy
+        run: cargo clippy --workspace -- -D warnings
+      - name: Narzędzia audytu
+        run: cargo install cargo-audit cargo-deny --locked
+      - name: cargo audit
+        run: cargo audit
+      # licences (the approved list), bans, sources, advisories; targets of all artifacts (deny.toml, docs/LICENCJE.md)
+      - name: cargo deny
+        run: cargo deny check
+      - name: cargo deny (aplikacja Tauri)
+        run: cargo deny --manifest-path app/src-tauri/Cargo.toml check licenses bans sources
+
+  ui:
+    name: UI (Node 22, WASM)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Toolchain i wasm-pack
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-pack --locked
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+      - name: Zależności
+        working-directory: ui
+        run: npm ci --ignore-scripts
+      # npm run build samo buduje WASM (wasm-pack) przed tsc i vite, także ramkę podglądu
+      - name: Build (wasm, tsc, vite)
+        working-directory: ui
+        run: npm run build
+      - name: Testy
+        working-directory: ui
+        run: npx vitest run
+      - uses: actions/upload-artifact@v4.6.2
+        with:
+          name: notes-wasm
+          path: ui/src/wasm/
+          if-no-files-found: error
+
+  mcp:
+    name: MCP (Node 22)
+    needs: ui
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4.3.0
+        with:
+          name: notes-wasm
+          path: ui/src/wasm
+      # build.mjs rozwiązuje moduły także w ui/node_modules, a mcp/src importuje ui/src
+      - name: Zależności UI
+        working-directory: ui
+        run: npm ci --ignore-scripts
+      - name: Zależności MCP
+        working-directory: mcp
+        run: npm ci --ignore-scripts
+      - name: Audyt (produkcyjne zależności)
+        working-directory: mcp
+        run: npm audit --omit=dev
+      - name: Build
+        working-directory: mcp
+        run: npm run build
+      - name: Testy
+        working-directory: mcp
+        run: npx vitest run
+      - name: Typy
+        working-directory: mcp
+        run: npx tsc --noEmit
+
+  secrets:
+    name: Skan sekretów (gitleaks)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: gitleaks/gitleaks-action@v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Licencje (docs/LICENCJE.md): lista dozwolonych licencji npm, REUSE, aktualność THIRD_PARTY_NOTICES.txt.
+  # Zmiana zależności bez odświeżenia not (node scripts/licencje/generate.mjs) kończy się tu błędem.
+  licencje:
+    name: Licencje (npm, REUSE, noty)
+    runs-on: ubuntu-24.04
+    env:
+      # the approved licences for npm packages (docs/UWAGI.md, 2026-11-24); MPL-2.0 and LGPL only by name below
+      ALLOW: "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;Zlib;MIT AND Zlib;Apache-2.0 OR MIT"
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Toolchain i wasm-pack
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-pack --locked
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: "22"
+      - name: Zależności
+        run: |
+          (cd ui && npm ci --ignore-scripts)
+          (cd mcp && npm ci --ignore-scripts)
+      # dxf-viewer, web-ifc: MPL-2.0, files unchanged (docs/PODGLAD.md §1); libheif-js: LGPL, shipped as a separate
+      # file from vendor/lgpl (docs/LICENCJE.md)
+      - name: Licencje npm (UI)
+        working-directory: ui
+        run: npx license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow "$ALLOW" --excludePackages "dxf-viewer@1.0.51;web-ifc@0.0.79;libheif-js@1.23.5"
+      - name: Licencje npm (MCP)
+        working-directory: mcp
+        run: npx --prefix ../ui license-checker-rseidelsohn --production --onlyAllow "$ALLOW" --excludePackagesStartingWith "@notatki/mcp"
+      - name: REUSE
+        run: pipx run reuse==5.0.2 lint
+      - name: Testy generatora not
+        run: node --test scripts/licencje/*.test.mjs
+      # the builds record which packages end up in each bundle (scripts/licencje/collect.mjs)
+      - name: Budowa strony i MCP
+        run: |
+          (cd ui && npm run build)
+          (cd mcp && npm run build)
+      - name: THIRD_PARTY_NOTICES.txt aktualny
+        run: node scripts/licencje/generate.mjs --check

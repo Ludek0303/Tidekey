@@ -1,0 +1,309 @@
+{
+ "dwie-kolumny.png": {
+  "cer": 0.6145,
+  "lines": [
+   {
+    "text": "Pierwsza kolumna tekstu Druga kolumna opisuje",
+    "conf": 1.0
+   },
+   {
+    "text": "zawiera zdania o pogodzie, wyniki sprzedaży w maju:",
+    "conf": 0.979
+   },
+   {
+    "text": "która w środę będzie wzrost o 12,5 procent",
+    "conf": 0.988
+   },
+   {
+    "text": "słoneczna i ciepła. względem kwietnia.",
+    "conf": 0.974
+   }
+  ]
+ },
+ "obrot-exif.jpg": {
+  "cer": 0.0059,
+  "lines": [
+   {
+    "text": "FAKTURA VAT nr 12/03/2026",
+    "conf": 1.0
+   },
+   {
+    "text": "Sprzedawca: Przedsiębiorstwo Usługowe Žółw sp. z o.0.",
+    "conf": 0.971
+   },
+   {
+    "text": "ul. Żródlana 15, 00-950 Łódź",
+    "conf": 0.967
+   },
+   {
+    "text": "Nabywca: Gęślą Jaźń Spółdzielnia Mieszkaniowa",
+    "conf": 0.987
+   },
+   {
+    "text": "Termin płatności: 15 marca 2026 r.",
+    "conf": 0.984
+   },
+   {
+    "text": "Usługa hostingu serwera — 1 240,00 zł",
+    "conf": 0.996
+   },
+   {
+    "text": "Zażółć gęślą jaźń. Pchnąć w tę łódź jeża",
+    "conf": 0.975
+   },
+   {
+    "text": "lub ośm skrzyń fig. Ćma ślizga się po żółtym liściu.",
+    "conf": 0.981
+   },
+   {
+    "text": "Razem do zapłaty: 1 525,20 zł (słownie: tysiąc pięćset",
+    "conf": 0.997
+   },
+   {
+    "text": "dwadzieścia pięć złotych 20/100)",
+    "conf": 0.995
+   },
+   {
+    "text": "Uwagi: płatność przelewem na rachunek 12 3456 7890",
+    "conf": 0.99
+   },
+   {
+    "text": "Dziękujemy za współpracę i życzymy miłego dnia!",
+    "conf": 0.988
+   }
+  ]
+ },
+ "skan-czysty.png": {
+  "cer": 0.0059,
+  "lines": [
+   {
+    "text": "FAKTURA VAT nr 12/03/2026",
+    "conf": 0.987
+   },
+   {
+    "text": "Sprzedawca: Przedsiębiorstwo Usługowe Žółw sp. z o.0.",
+    "conf": 0.973
+   },
+   {
+    "text": "ul. Żródlana 15, 00-950 Łódź",
+    "conf": 0.971
+   },
+   {
+    "text": "Nabywca: Gęślą Jaźń Spółdzielnia Mieszkaniowa",
+    "conf": 0.967
+   },
+   {
+    "text": "Termin płatności: 15 marca 2026 r.",
+    "conf": 0.989
+   },
+   {
+    "text": "Usługa hostingu serwera — 1 240,00 zł",
+    "conf": 0.997
+   },
+   {
+    "text": "Zażółć gęślą jaźń. Pchnąć w tę łódź jeża",
+    "conf": 0.982
+   },
+   {
+    "text": "lub ośm skrzyń fig. Ćma ślizga się po żółtym liściu.",
+    "conf": 0.978
+   },
+   {
+    "text": "Razem do zapłaty: 1 525,20 zł (słownie: tysiąc pięćset",
+    "conf": 0.998
+   },
+   {
+    "text": "dwadzieścia pięć złotych 20/100)",
+    "conf": 0.995
+   },
+   {
+    "text": "Uwagi: płatność przelewem na rachunek 12 3456 7890",
+    "conf": 0.993
+   },
+   {
+    "text": "Dziękujemy za współpracę i życzymy miłego dnia!",
+    "conf": 0.979
+   }
+  ]
+ },
+ "skan-maly.png": {
+  "cer": 0.0039,
+  "lines": [
+   {
+    "text": "FAKTURA VAT nr 12/03/2026",
+    "conf": 1.0
+   },
+   {
+    "text": "Sprzedawca: Przedsiębiorstwo Usługowe Żółw sp. z o.0.",
+    "conf": 0.984
+   },
+   {
+    "text": "ul. Żródlana 15, 00-950 Łódź",
+    "conf": 0.986
+   },
+   {
+    "text": "Nabywca: Gęślą Jaźń Spółdzielnia Mieszkaniowa",
+    "conf": 0.983
+   },
+   {
+    "text": "Termin płatności: 15 marca 2026 r.",
+    "conf": 0.983
+   },
+   {
+    "text": "Usługa hostingu serwera — 1 240,00 zł",
+    "conf": 0.986
+   },
+   {
+    "text": "Zażółć gęślą jaźń. Pchnąć w tę łódź jeża",
+    "conf": 0.98
+   },
+   {
+    "text": "lub ośm skrzyń fig. Ćma ślizga się po żółtym liściu.",
+    "conf": 0.989
+   },
+   {
+    "text": "Razem do zapłaty: 1 525,20 zł (słownie: tysiąc pięćset",
+    "conf": 0.99
+   },
+   {
+    "text": "dwadzieścia pięć złotych 20/100)",
+    "conf": 0.998
+   },
+   {
+    "text": "Uwagi: płatność przelewem na rachunek 12 3456 7890",
+    "conf": 0.999
+   },
+   {
+    "text": "Dziękujemy za współpracę i życzymy miłego dnia!",
+    "conf": 0.994
+   }
+  ]
+ },
+ "skan-obrot.png": {
+  "cer": 0.0059,
+  "lines": [
+   {
+    "text": "FAKTURA VAT nr 12/03/2026",
+    "conf": 0.999
+   },
+   {
+    "text": "Sprzedawca: Przedsiębiorstwo Usługowe Żółw sp. z 0.0.",
+    "conf": 0.985
+   },
+   {
+    "text": "ul. Żródlana 15, 00-950 Łódź",
+    "conf": 0.967
+   },
+   {
+    "text": "Nabywca: Gęślą Jaźń Spółdzielnia Mieszkaniowa",
+    "conf": 0.992
+   },
+   {
+    "text": "Termin płatności: 15 marca 2026 r.",
+    "conf": 0.997
+   },
+   {
+    "text": "Usługa hostingu serwera — 1 240,00 zł",
+    "conf": 0.994
+   },
+   {
+    "text": "Zażółć gęślą jaźń. Pchnąć w tę łódź jeża",
+    "conf": 0.97
+   },
+   {
+    "text": "lub ośm skrzyń fig. Ćma ślizga się po żółtym liściu.",
+    "conf": 0.971
+   },
+   {
+    "text": "Razem do zapłaty: 1 525,20 zł (słownie: tysiąc pięćset",
+    "conf": 0.989
+   },
+   {
+    "text": "dwadzieścia pięć złotych 20/100)",
+    "conf": 0.999
+   },
+   {
+    "text": "Uwagi: płatność przelewem na rachunek 12 3456 7890",
+    "conf": 0.99
+   },
+   {
+    "text": "Dziękujemy za współpracę i życzymy miłego dnia!",
+    "conf": 0.998
+   }
+  ]
+ },
+ "skan-szum.png": {
+  "cer": 0.0177,
+  "lines": [
+   {
+    "text": "FAKTURA VAT nr 12/03/2026",
+    "conf": 0.991
+   },
+   {
+    "text": "Sprzedawca: Przedsiębiorstwo Usługowe Zółw sp. z o.0.",
+    "conf": 0.976
+   },
+   {
+    "text": "ul. Żródlana 15, 00-950 Łódź",
+    "conf": 0.959
+   },
+   {
+    "text": "Nabywca: Gęślą Jażń Spółdzielnia Mieszkaniowa",
+    "conf": 0.971
+   },
+   {
+    "text": "Termin płatności: 15 marca 2026 r.",
+    "conf": 0.979
+   },
+   {
+    "text": "Usługa hostingu serwera — 1 240,00 zł",
+    "conf": 0.959
+   },
+   {
+    "text": "Zazółć gęślą jaźń. Pchnąć w tę łódż jeza",
+    "conf": 0.935
+   },
+   {
+    "text": "lub ośm skrzyń fig. Ćma ślizga się po zółtym liściu",
+    "conf": 0.974
+   },
+   {
+    "text": "Razem do zapłaty: 1 525,20 zł (słownie: tysiąc pięćset",
+    "conf": 0.994
+   },
+   {
+    "text": "dwadzieścia pięć złotych 20/100)",
+    "conf": 0.997
+   },
+   {
+    "text": "Uwagi: płatność przelewem na rachunek 12 3456 7890",
+    "conf": 0.995
+   },
+   {
+    "text": "Dziękujemy za współpracę i życzymy miłego dnia!",
+    "conf": 0.991
+   }
+  ]
+ },
+ "zdjecie-bez-tekstu.png": {
+  "cer": 1.0,
+  "lines": [
+   {
+    "text": "•",
+    "conf": 0.138
+   },
+   {
+    "text": "-",
+    "conf": 0.524
+   },
+   {
+    "text": ".",
+    "conf": 0.441
+   },
+   {
+    "text": "• -",
+    "conf": 0.469
+   }
+  ]
+ }
+}

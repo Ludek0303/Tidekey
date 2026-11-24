@@ -1,0 +1,23 @@
+{
+  "projekt": "Ogród wspólnoty",
+  "wersja": 3,
+  "aktywny": true,
+  "uczestnicy": [
+    {
+      "imie": "Zofia",
+      "rola": "koordynatorka",
+      "godziny": 12.5
+    },
+    {
+      "imie": "Łukasz",
+      "rola": "skarbnik",
+      "godziny": 3
+    }
+  ],
+  "uwagi": null,
+  "tagi": [
+    "ogród",
+    "wiosna",
+    "żółć"
+  ]
+}

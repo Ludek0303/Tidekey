@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "The main window: events from the backend, and the folder picker of the first-run screen",
+  "windows": ["main"],
+  "permissions": ["core:default", "dialog:default"]
+}

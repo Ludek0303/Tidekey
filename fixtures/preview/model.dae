@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset><contributor><authoring_tool>make-models.py</authoring_tool></contributor>
+    <created>2026-01-01T00:00:00</created><modified>2026-01-01T00:00:00</modified>
+    <up_axis>Z_UP</up_axis><unit name="millimeter" meter="0.001"/></asset>
+  <library_effects>
+    <effect id="czerwony-fx"><profile_COMMON><technique sid="common"><phong>
+      <diffuse><color>0.8 0.2 0.2 1</color></diffuse></phong></technique></profile_COMMON></effect>
+  </library_effects>
+  <library_materials>
+    <material id="czerwony" name="Czerwony"><instance_effect url="#czerwony-fx"/></material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="szescian-geom" name="Szescian">
+      <mesh>
+        <source id="szescian-pos">
+          <float_array id="szescian-pos-array" count="24">0 0 0 10 0 0 10 10 0 0 10 0 0 0 10 10 0 10 10 10 10 0 10 10</float_array>
+          <technique_common><accessor source="#szescian-pos-array" count="8" stride="3">
+            <param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/>
+          </accessor></technique_common>
+        </source>
+        <vertices id="szescian-verts"><input semantic="POSITION" source="#szescian-pos"/></vertices>
+        <triangles count="12" material="czerwony">
+          <input semantic="VERTEX" source="#szescian-verts" offset="0"/>
+          <p>0 3 2 0 2 1 4 5 6 4 6 7 0 1 5 0 5 4 2 3 7 2 7 6 0 4 7 0 7 3 1 2 6 1 6 5</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="scena" name="Scena">
+      <node id="szescian" name="Szescian">
+        <instance_geometry url="#szescian-geom">
+          <bind_material><technique_common>
+            <instance_material symbol="czerwony" target="#czerwony"/>
+          </technique_common></bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene><instance_visual_scene url="#scena"/></scene>
+</COLLADA>

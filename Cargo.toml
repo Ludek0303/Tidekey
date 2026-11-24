@@ -1,0 +1,9 @@
+[workspace]
+resolver = "2"
+members = ["crates/core", "crates/sync", "crates/web", "crates/node", "crates/bridge", "crates/preview"]
+# the Tauri shell needs WebKit to build; it is built on its own (see app/src-tauri/Cargo.toml)
+exclude = ["app/src-tauri"]
+
+# The project's licence (LICENSE); every crate takes it with `license.workspace = true` (docs/LICENCJE.md).
+[workspace.package]
+license = "AGPL-3.0-or-later"

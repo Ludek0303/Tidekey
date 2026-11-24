@@ -1,0 +1,16 @@
+/* Plik testowy: arkusz stylów do podglądu kodu */
+:root {
+  --kolor-tla: #f7f5ef;
+  --kolor-tekstu: #1d2430;
+}
+
+body {
+  margin: 0;
+  background: var(--kolor-tla);
+  color: var(--kolor-tekstu);
+  font-family: "Source Serif Pro", Georgia, serif;
+}
+
+h1::before {
+  content: "❦ ";
+}

@@ -1,0 +1,34 @@
+{
+  "manifest_version": "0.3",
+  "name": "notatki",
+  "display_name": "Notatki",
+  "version": "1.0.0",
+  "description": "Claude odczytuje i zmienia Twoje zaszyfrowane notatki Notatki (po parowaniu i zgodzie).",
+  "author": {
+    "name": "Notatki"
+  },
+  "compatibility": {
+    "runtimes": {
+      "node": ">=22.0.0"
+    }
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/notatki-mcp.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/notatki-mcp.mjs"],
+      "env": {
+        "NOTES_MCP_SERVER": "${user_config.server_url}"
+      }
+    }
+  },
+  "user_config": {
+    "server_url": {
+      "type": "string",
+      "title": "Adres serwera",
+      "description": "Adres serwera Notatki, np. https://notatki.example.pl",
+      "required": true
+    }
+  }
+}

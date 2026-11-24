@@ -1,0 +1,22 @@
+{
+  "sha": "0d8c6e4a2b9f7d5c3e1a8b6d4f2c0e9a7b5d3f1c",
+  "url": "https://api.github.com/repos/przyklad/duze/git/trees/0d8c6e4a2b9f7d5c3e1a8b6d4f2c0e9a7b5d3f1c",
+  "tree": [
+    {
+      "path": "archiwum",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6e8a0c2e4b6d8f0a2c4e6b8d0f2a4c6e8b0d2f4a",
+      "url": "https://api.github.com/repos/przyklad/duze/git/trees/6e8a0c2e4b6d8f0a2c4e6b8d0f2a4c6e8b0d2f4a"
+    },
+    {
+      "path": "archiwum/2024.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a3c5e7b9d1f3a5c7e9b1d3f5a7c9e1b3d5f7a9e",
+      "size": 1204,
+      "url": "https://api.github.com/repos/przyklad/duze/git/blobs/1a3c5e7b9d1f3a5c7e9b1d3f5a7c9e1b3d5f7a9e"
+    }
+  ],
+  "truncated": true
+}

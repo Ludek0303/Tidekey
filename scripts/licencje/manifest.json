@@ -1,0 +1,309 @@
+{
+  "$comment": "Ręczna część not (docs/LICENCJE.md). overrides: składniki bez pliku licencji w paczce (teksty z repozytorium autora w tej wersji, scripts/licencje/texts/). notes: zmiany przy budowaniu i uwagi. extra: pliki, których narzędzia nie widzą. Ścieżki: względem repozytorium; cargo:<crate>@<wersja>/<ścieżka> i npm:<pakiet>/<ścieżka> wskazują pliki w tej paczce.",
+  "overrides": {
+    "acto@0.8.2": {
+      "canonical": [
+        "MIT"
+      ],
+      "why": "paczka i repozytorium (commit bfe9c141) bez pliku licencji; Cargo.toml: license = \"Apache-2.0 OR MIT\", authors = Roland Kuhn"
+    },
+    "alloc-stdlib@0.3.0": {
+      "texts": "texts/alloc-stdlib-0.3.0",
+      "from": "https://github.com/dropbox/rust-alloc-no-stdlib @ 0a81fd69 (alloc-stdlib/LICENSE)"
+    },
+    "bitcoin_hashes@0.14.101": {
+      "canonical": [
+        "CC0-1.0"
+      ],
+      "why": "CC0-1.0 nie wymaga noty; tekst CC0 dla porządku"
+    },
+    "dlopen2@0.8.2": {
+      "texts": "texts/dlopen2-0.8.2",
+      "from": "https://github.com/OpenByteDev/dlopen2 @ cc80e4a0 (LICENSE)"
+    },
+    "draco3d@1.5.9": {
+      "texts": "texts/draco3d-1.5.9",
+      "from": "https://github.com/google/draco @ tag 1.5.9 (LICENSE)"
+    },
+    "iroh-base@1.4.1": {
+      "texts": "texts/iroh-base-1.4.1",
+      "from": "https://github.com/n0-computer/iroh @ d6c6963b"
+    },
+    "iroh-dns@1.4.1": {
+      "texts": "texts/iroh-dns-1.4.1",
+      "from": "https://github.com/n0-computer/iroh @ d6c6963b"
+    },
+    "iroh-mdns-address-lookup@0.6.1": {
+      "texts": "texts/iroh-mdns-address-lookup-0.6.1",
+      "from": "https://github.com/n0-computer/iroh-address-lookups @ 0f5f547c"
+    },
+    "iroh-relay@1.4.1": {
+      "texts": "texts/iroh-relay-1.4.1",
+      "from": "https://github.com/n0-computer/iroh @ d6c6963b (paczka ma tylko LICENSE-BSD3 kodu z Tailscale)"
+    },
+    "iroh@1.4.1": {
+      "texts": "texts/iroh-1.4.1",
+      "from": "https://github.com/n0-computer/iroh @ d6c6963b (paczka ma tylko LICENSE-BSD3 kodu z Tailscale)"
+    },
+    "netwatch@0.19.3": {
+      "texts": "texts/netwatch-0.19.3",
+      "from": "https://github.com/n0-computer/net-tools @ 0030e57f"
+    },
+    "onnxruntime-common@1.24.1": {
+      "texts": "texts/onnxruntime-web-1.24.1",
+      "from": "jak onnxruntime-web 1.24.1 (ten sam projekt i wydanie)"
+    },
+    "onnxruntime-web@1.24.1": {
+      "texts": "texts/onnxruntime-web-1.24.1",
+      "from": "oficjalny pakiet onnxruntime 1.24.1 (PyPI, sha256 1cabe71c…): onnxruntime/LICENSE i ThirdPartyNotices.txt"
+    },
+    "pako@1.0.11": {
+      "canonical": [
+        "Zlib"
+      ],
+      "addCopyright": [
+        "(C) 1995-2013 Jean-loup Gailly and Mark Adler (zlib, nagłówki lib/zlib/*.js)"
+      ],
+      "why": "część Zlib (port zlib) nie ma osobnego pliku; jej tekst jest w nagłówkach plików lib/zlib/*.js"
+    },
+    "pako@2.1.0": {
+      "canonical": [
+        "Zlib"
+      ],
+      "addCopyright": [
+        "(C) 1995-2013 Jean-loup Gailly and Mark Adler (zlib, nagłówki lib/zlib/*.js)"
+      ],
+      "why": "część Zlib (port zlib) nie ma osobnego pliku; jej tekst jest w nagłówkach plików lib/zlib/*.js"
+    },
+    "portmapper@0.19.3": {
+      "texts": "texts/portmapper-0.19.3",
+      "from": "https://github.com/n0-computer/net-tools @ 0030e57f"
+    },
+    "rsqlite-vfs@0.1.1": {
+      "texts": "texts/rsqlite-vfs-0.1.1",
+      "from": "https://github.com/Spxg/sqlite-wasm-rs @ 1bb30978 (LICENSE)"
+    },
+    "selectors@0.38.0": {
+      "canonical": [
+        "MPL-2.0"
+      ],
+      "why": "repozytorium servo/stylo (commit 572ecba2) nie ma pliku licencji; pliki źródłowe mają nagłówek MPL-2.0"
+    },
+    "webview2-com-sys@0.39.1": {
+      "texts": "texts/webview2-com-sys-0.39.1",
+      "from": "https://github.com/wravery/webview2-rs @ edc2caf8 (LICENSE)"
+    },
+    "webview2-com@0.39.1": {
+      "texts": "texts/webview2-com-0.39.1",
+      "from": "https://github.com/wravery/webview2-rs @ edc2caf8 (LICENSE)"
+    },
+    "yrs@0.28.0": {
+      "texts": "texts/yrs-0.28.0",
+      "from": "https://github.com/y-crdt/y-crdt @ 23b7f569 (LICENSE)"
+    }
+  },
+  "notes": {
+    "pptx-browser": "Zmienione przy budowaniu (ui/preview/vite-offline.ts): src/index.js bez pobierania czcionek Google, src/render.js z deklaracją defRPr przed użyciem.",
+    "online-3d-viewer": "Zmienione przy budowaniu (ui/preview/vite-o3dv.ts): w o3dv.module.js podmienione ciała LoadExternalLibrary i CreateOcctWorker (biblioteki z pakietu, bez pobierania z sieci; bez OpenCascade).",
+    "lucide": "Także ikona strony (ui/public/favicon.svg): ikona „book-open” z tego zestawu na fioletowym tle.",
+    "jszip": "Licencja podwójna MIT albo GPL-3.0-or-later; korzystamy z MIT.",
+    "pdfjs-dist": "Pliki danych pdf.js dołączone do ramki podglądu (CMapy, czcionki Foxit, profil ICC, dekodery WASM) mają osobne pozycje niżej. Czcionek Liberation (GPL-2.0) nie dołączamy."
+  },
+  "extra": [
+    {
+      "name": "pdf.js: CMapy Adobe (cmaps/*.bcmap)",
+      "version": "npm:pdfjs-dist",
+      "license": "BSD-3-Clause",
+      "artifacts": [
+        "web"
+      ],
+      "files": [
+        "npm:pdfjs-dist/cmaps/LICENSE"
+      ]
+    },
+    {
+      "name": "pdf.js: czcionki Foxit (standard_fonts/Foxit*.pfb)",
+      "version": "npm:pdfjs-dist",
+      "license": "BSD-3-Clause",
+      "artifacts": [
+        "web"
+      ],
+      "files": [
+        "npm:pdfjs-dist/standard_fonts/LICENSE_FOXIT"
+      ]
+    },
+    {
+      "name": "pdf.js: profil ICC (iccs/*.icc)",
+      "version": "npm:pdfjs-dist",
+      "license": "CC0-1.0",
+      "artifacts": [
+        "web"
+      ],
+      "files": [
+        "npm:pdfjs-dist/iccs/LICENSE"
+      ]
+    },
+    {
+      "name": "pdf.js: dekoder OpenJPEG (wasm/openjpeg.wasm)",
+      "version": "npm:pdfjs-dist",
+      "license": "BSD-2-Clause AND Apache-2.0",
+      "artifacts": [
+        "web"
+      ],
+      "files": [
+        "npm:pdfjs-dist/wasm/LICENSE_OPENJPEG",
+        "npm:pdfjs-dist/wasm/LICENSE_PDFJS_OPENJPEG"
+      ]
+    },
+    {
+      "name": "pdf.js: dekoder JBIG2 z PDFium (wasm/jbig2.wasm)",
+      "version": "npm:pdfjs-dist",
+      "license": "BSD-3-Clause AND Apache-2.0",
+      "artifacts": [
+        "web"
+      ],
+      "files": [
+        "npm:pdfjs-dist/wasm/LICENSE_JBIG2",
+        "npm:pdfjs-dist/wasm/LICENSE_PDFJS_JBIG2"
+      ]
+    },
+    {
+      "name": "pdf.js: qcms (wasm/qcms_bg.wasm)",
+      "version": "npm:pdfjs-dist",
+      "license": "MIT AND Apache-2.0",
+      "artifacts": [
+        "web"
+      ],
+      "files": [
+        "npm:pdfjs-dist/wasm/LICENSE_QCMS",
+        "npm:pdfjs-dist/wasm/LICENSE_PDFJS_QCMS"
+      ]
+    },
+    {
+      "name": "libsodium (biblioteka C skompilowana do WebAssembly w pakiecie npm libsodium)",
+      "version": "commit 33cc75ab (podmoduł libsodium.js @ 2830fcf2)",
+      "license": "ISC",
+      "artifacts": [
+        "web",
+        "mcp"
+      ],
+      "source": "https://github.com/jedisct1/libsodium/tree/33cc75ab1565d9dcbe808354191bd572ad6b64d0",
+      "files": [
+        "scripts/licencje/texts/libsodium-c-33cc75ab/LICENSE"
+      ]
+    },
+    {
+      "name": "PaddleOCR PP-OCRv5: modele wykrywania i rozpoznawania tekstu oraz słownik znaków (vendor/ocr-models)",
+      "version": "PaddleOCR 3.0 (modele paddle3.0.0)",
+      "license": "Apache-2.0",
+      "artifacts": [
+        "web"
+      ],
+      "source": "https://github.com/PaddlePaddle/PaddleOCR/tree/v3.0.0",
+      "files": [
+        "vendor/ocr-models/LICENSE",
+        "vendor/ocr-models/NOTICE"
+      ],
+      "changes": "Zmienione przez autorów Notatek: konwersja do ONNX (paddle2onnx), uproszczenie (onnxsim), wagi float16; opis w NOTICE, odtworzenie: scripts/models/convert.sh."
+    },
+    {
+      "name": "Parakeet Ultra (model rozpoznawania mowy, eksport ONNX Olicorne/parakeet-tdt-0.6b-v3-ultra-onnx)",
+      "version": "commit b27f93c2238aa35e138996c005a62f1e8430f801",
+      "license": "CC-BY-4.0",
+      "artifacts": [
+        "web"
+      ],
+      "source": "https://huggingface.co/Olicorne/parakeet-tdt-0.6b-v3-ultra-onnx",
+      "copyright": [
+        "Moondream (moondream/parakeet-ultra), na podstawie NVIDIA nvidia/parakeet-tdt-0.6b-v3; eksport ONNX: Olicorne"
+      ],
+      "files": [
+        "scripts/licencje/spdx/CC-BY-4.0.txt"
+      ],
+      "changes": "Zmiany eksportu: przebudowa grafu, zaokrąglenie mantys do 12 bitów, kwantyzacja fp16/int8/4-bit, zablokowany token <unk>. Plik serwuje notes-node z /models/ (pobiera go operator, scripts/fetch-voice-models.mjs)."
+    },
+    {
+      "name": "Parakeet TDT 0.6B v3 (zapasowy model mowy, eksport ONNX ysdede/parakeet-tdt-0.6b-v3-onnx)",
+      "version": "commit e5356bf6e24bdb7a269536b0e9e7869bc034b893",
+      "license": "CC-BY-4.0",
+      "artifacts": [
+        "web"
+      ],
+      "source": "https://huggingface.co/ysdede/parakeet-tdt-0.6b-v3-onnx",
+      "copyright": [
+        "NVIDIA (nvidia/parakeet-tdt-0.6b-v3); eksport ONNX: istupakov, ysdede"
+      ],
+      "files": [
+        "scripts/licencje/spdx/CC-BY-4.0.txt"
+      ],
+      "changes": "Zmiany eksportu: konwersja fp16, kwantyzacja int8. Plik serwuje notes-node z /models/."
+    },
+    {
+      "name": "Silero VAD (model wykrywania mowy, silero_vad.onnx)",
+      "version": "v6.2.3",
+      "license": "MIT",
+      "artifacts": [
+        "web"
+      ],
+      "source": "https://github.com/snakers4/silero-vad/tree/v6.2.3",
+      "files": [
+        "scripts/licencje/texts/silero-vad-6.2.3/LICENSE"
+      ]
+    },
+    {
+      "name": "SQLite (kod C wkompilowany przez libsqlite3-sys i sqlite-wasm-rs)",
+      "version": "3.53.2 (libsqlite3-sys 0.38.2), 3.53.0 (sqlite-wasm-rs 0.5.5)",
+      "license": "blessing",
+      "artifacts": [
+        "web",
+        "node",
+        "desktop"
+      ],
+      "source": "https://sqlite.org/copyright.html",
+      "text": "The author disclaims copyright to this source code.  In place of\na legal notice, here is a blessing:\n\n   May you do good and not evil.\n   May you find forgiveness for yourself and forgive others.\n   May you share freely, never taking more than you give.",
+      "copyright": [
+        "SQLite: autorzy zrzekli się praw autorskich (domena publiczna)"
+      ]
+    },
+    {
+      "name": "zstd (kod C wkompilowany przez zstd-sys)",
+      "version": "1.5.7 (zstd-sys 2.1.2+zstd.1.5.7)",
+      "license": "BSD-3-Clause",
+      "artifacts": [
+        "web",
+        "node",
+        "desktop"
+      ],
+      "files": [
+        "cargo:zstd-sys@2.1.2+zstd.1.5.7/zstd/LICENSE"
+      ],
+      "note": "zstd jest na licencji BSD-3-Clause albo GPL-2.0; korzystamy z BSD-3-Clause."
+    },
+    {
+      "name": "Microsoft WebView2 SDK: WebView2LoaderStatic.lib (dołączany przez webview2-com-sys, Windows)",
+      "version": "1.0.3800.47",
+      "license": "BSD-3-Clause",
+      "artifacts": [
+        "desktop"
+      ],
+      "source": "https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.3800.47",
+      "files": [
+        "scripts/licencje/texts/webview2-sdk-1.0.3800.47/LICENSE.txt",
+        "scripts/licencje/texts/webview2-sdk-1.0.3800.47/NOTICE.txt"
+      ]
+    },
+    {
+      "name": "Obraz bazowy gcr.io/distroless/cc-debian12:nonroot (pakiety Debiana 12: glibc, libgcc, libstdc++, OpenSSL, ca-certificates, tzdata, base-files, netbase)",
+      "version": "Debian 12 (bookworm)",
+      "license": "LicenseRef-Debian-Packages",
+      "artifacts": [
+        "docker"
+      ],
+      "source": "https://sources.debian.org/ (źródła pakietów Debiana 12), https://github.com/GoogleContainerTools/distroless",
+      "text": "Licencja każdego pakietu jest w obrazie w /usr/share/doc/<pakiet>/copyright. Najważniejsze: glibc (LGPL-2.1-or-later), libgcc i libstdc++ (GPL-3.0-or-later z wyjątkiem GCC Runtime Library Exception), OpenSSL (Apache-2.0), ca-certificates (MPL-2.0), tzdata (domena publiczna), base-files i netbase (GPL-2.0-or-later). To pakiety systemu, z którym program działa obok, a nie część naszego kodu. Kod źródłowy tych wersji udostępnia Debian (adres wyżej); na prośbę wskażemy dokładne wersje pakietów z obrazu.",
+      "copyright": [
+        "Autorzy poszczególnych pakietów Debiana (pliki copyright w obrazie)"
+      ]
+    }
+  ]
+}
